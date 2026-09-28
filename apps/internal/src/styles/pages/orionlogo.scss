@@ -1,0 +1,152 @@
+.orion-flight {
+    position: relative;
+    width: 50px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.orion-logo {
+    width: 25px;
+    height: 21px;
+    overflow: visible;
+    // Whole bird flies
+    animation: orion-fly 4s ease-in-out infinite;
+    .orion-bird {
+        transform-box: fill-box;
+        transform-origin: center;
+    }
+
+    // Top wing
+    .orion-wing-top {
+        transform-box: fill-box;
+        transform-origin: 75% 100%;
+        animation: orion-wing-top 1.15s ease-in-out infinite;
+    }
+
+    // Bottom wing / leaf
+    .orion-wing-bottom {
+        transform-box: fill-box;
+        transform-origin: 45% 10%;
+        animation: orion-wing-bottom 1.15s ease-in-out infinite;
+    }
+
+    // Body moves naturally with the bird
+    .orion-body {
+        transform-box: fill-box;
+        transform-origin: center;
+
+        animation: orion-body 1.15s ease-in-out infinite;
+    }
+}
+
+// ==========================================================
+// WHOLE BIRD FLIGHT
+// ==========================================================
+
+@keyframes orion-fly {
+    0% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+
+    25% {
+        transform: translate3d(3%, -5%, 0) rotate(-2deg);
+    }
+
+    50% {
+        transform: translate3d(6%, 0, 0) rotate(0deg);
+    }
+
+    75% {
+        transform: translate3d(3%, 5%, 0) rotate(2deg);
+    }
+
+    100% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+}
+
+// ==========================================================
+// TOP WING FLAP
+// ==========================================================
+
+@keyframes orion-wing-top {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-10deg) translateY(-2%);
+    }
+
+    50% {
+        transform: rotate(4deg) translateY(1%);
+    }
+
+    75% {
+        transform: rotate(-8deg) translateY(-1%);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+// ==========================================================
+// LOWER WING / LEAF
+// ==========================================================
+
+@keyframes orion-wing-bottom {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(6deg) translateY(1%);
+    }
+
+    50% {
+        transform: rotate(-3deg) translateY(-1%);
+    }
+
+    75% {
+        transform: rotate(5deg) translateY(1%);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+// ==========================================================
+// BODY FLOAT
+// ==========================================================
+
+@keyframes orion-body {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-2%);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+// ==========================================================
+// ACCESSIBILITY
+// ==========================================================
+
+@media (prefers-reduced-motion: reduce) {
+    .orion-logo,
+    .orion-logo .orion-wing-top,
+    .orion-logo .orion-wing-bottom,
+    .orion-logo .orion-body {
+        animation: none;
+    }
+}

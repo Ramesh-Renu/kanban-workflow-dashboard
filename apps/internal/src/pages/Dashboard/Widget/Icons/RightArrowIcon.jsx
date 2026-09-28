@@ -1,0 +1,28 @@
+import React from "react";
+
+const AtRiskSVGImage = ({
+  color,
+  style,
+  commonPlaceIconsStyle,
+  bgColor = "white",
+  needDivElement = true,
+}) => {
+  const svgString =`<svg width="7" height="10" viewBox="0 0 7 10" fill="${bgColor}" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M1.24897 9.41248C0.882273 9.04578 0.882273 8.45124 1.24897 8.08454L4.34098 4.99253L1.24897 1.90053C0.882273 1.53383 0.882273 0.939288 1.24897 0.572589C1.61567 0.205888 2.21021 0.205888 2.57691 0.572589L6.33289 4.32856C6.69959 4.69526 6.69959 5.2898 6.33289 5.6565L2.57691 9.41248C2.21021 9.77917 1.61567 9.77917 1.24897 9.41248Z" fill="${color}"/>
+</svg>
+
+`.trim();
+  const svgDataUrl = `data:image/svg+xml;utf8,${encodeURIComponent(svgString)}`;
+  return (
+    <>
+      {needDivElement ? (
+        <div className="trend-item__icon" style={commonPlaceIconsStyle}>
+          <img src={svgDataUrl} style={style} alt="svg icon" />
+        </div>
+      ) : (
+        <img src={svgDataUrl} style={style} alt="svg icon" />
+      )}
+    </>
+  );
+};
+export default AtRiskSVGImage;

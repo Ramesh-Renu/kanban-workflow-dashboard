@@ -1,0 +1,413 @@
+// ============================================================
+// SVG 449 x 434 -> HTML / SCSS
+// ============================================================
+
+.login-knowledge-slide {
+    --dashboard-cycle: 4s;
+    --dashboard-cycle-64: 4s;
+    --kb-card-opacity: 1;
+    --kb-from-y: 12px;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.45s ease;
+
+    &.is-active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    &__frame {
+        width: min(100%, 440px);
+        min-height: 420px;
+        max-height: 420px;
+        position: relative;
+        overflow: visible;
+    }
+
+    .slide-3-top-right-container {
+        position: absolute;
+        top: -5%;
+        right: -12px;
+        z-index: 20;
+        width: 88px;
+        height: 88px;
+        --kb-from-y: -10px;
+        --kb-card-opacity: 1;
+
+        .slide-3-top-right {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    }
+
+    &:not(.is-static) .kb-stagger-item {
+        visibility: hidden;
+        opacity: 0;
+        transform: translateY(var(--kb-from-y));
+    }
+
+    $reveal-steps: 16, 28, 40, 52;
+
+    @each $pct in $reveal-steps {
+        &.is-active:not(.is-static) .kb-reveal-at-#{$pct} {
+            animation: kb-reveal-at-#{$pct} var(--dashboard-cycle) linear forwards;
+        }
+    }
+    &.is-active:not(.is-static) .kb-reveal-at-64 {
+        animation:
+            kb-reveal-at-64 var(--dashboard-cycle-64) linear forwards,
+            kb-card-zoom 1.2s linear both;
+        animation-delay: 0s, var(--dashboard-cycle-64);
+        transform-origin: center center;
+    }
+
+    &.is-active.is-paused:not(.is-static) .kb-stagger-item {
+        animation-iteration-count: 1;
+        animation-fill-mode: forwards;
+    }
+
+    &.is-static.is-active .kb-stagger-item {
+        animation: none;
+        visibility: visible;
+        opacity: var(--kb-card-opacity);
+        transform: none;
+    }
+}
+
+.knowledge-base {
+    width: 100%;
+    height: 100%;
+
+    // ==========================================================
+    // COMMON CARD
+    // ==========================================================
+
+    .knowledge-card {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        background: rgba(255, 255, 255, 0.88);
+        
+        border-radius: 20px;
+        color: #222;
+        overflow: hidden;
+        font-size: 100%;
+        &.top {
+            box-shadow: -1px -10px 26.17px 0px rgba(45, 45, 37, 0.168627451);
+        }
+        &.bottom {
+            box-shadow: 0px 11px 26.17px 0px rgba(45, 45, 37, 0.168627451);
+        }
+        .card-icon {
+            position: relative;
+            flex: 0 0 10.45%;
+            width: 10.45%;
+            aspect-ratio: 1 / 1;
+            margin-left: 8%;
+            margin-right: 5.4%;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            overflow: hidden;
+
+            img {
+                display: block;
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+        }
+        .card-title {
+            min-width: 0;
+            margin: 0;
+            font-size: 140%;
+            line-height: 150%;
+            font-weight: 400;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    // ==========================================================
+    // 01 - FINANCIAL CALENDAR
+    // ==========================================================
+
+    .card-calendar {
+        left: 20%;
+        top: 1.5%;
+        width: calc(100% - 42%);
+        height: 16%;
+        --kb-card-opacity: 0.46;
+        --kb-from-y: -12px;
+        opacity: 0.46;
+        z-index: 1;
+    }
+
+    // ==========================================================
+    // 02 - SHARE ANALYSIS
+    // ==========================================================
+
+    .card-share {
+        left: 17%;
+        top: 14.52%;
+        width: calc(100% - 35%);
+        height: 16%;
+        --kb-card-opacity: 0.64;
+        --kb-from-y: -12px;
+        opacity: 0.64;
+        z-index: 2;
+    }
+
+    // ==========================================================
+    // 03 - ANNOUNCEMENTS
+    // ==========================================================
+
+    .card-announcements {
+        left: 12.5%;
+        top: 26.19%;
+        width: calc(100% - 25%);
+        height: 16%;
+        --kb-card-opacity: 0.82;
+        --kb-from-y: -12px;
+        opacity: 0.82;
+        z-index: 3;
+    }
+
+    // ==========================================================
+    // 04 - KNOWLEDGE BASE
+    // MAIN / ACTIVE CARD
+    // ==========================================================
+
+    .card-knowledge {
+        left: 3%;
+        top: 36.71%;
+        width: calc(100% - 5%);
+        height: 19.89%;
+        z-index: 10;
+        --kb-card-opacity: 1;
+        --kb-from-y: 8px;
+        background: rgba(255, 255, 255, 0.96);
+        border-radius: 23px;
+        box-shadow: 0px 13.48px 26.17px 0px #2d2d252b;
+
+        .card-icon {
+            flex-basis: 9.3%;
+            width: 9.3%;
+            margin-left: 6%;
+            margin-right: 4.5%;
+        }
+
+        .card-title {
+            min-width: 0;
+            font-size: 150%;
+            font-weight: 600;
+            line-height: 120%;
+            color: #202020;
+        }
+
+        .tools-button {
+            margin-left: auto;
+            margin-right: 6%;
+            flex-shrink: 0;
+            border: 0;
+            border-radius: 20px;
+            padding: 1% 1.5%;
+            background: #e9f7ff;
+            color: var(--color-primary);
+            font-size: 60%;
+            font-weight: 600;
+            line-height: 120%;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+    }
+
+    // ==========================================================
+    // 05 - KEY FIGURES
+    // ==========================================================
+
+    .card-figures {
+        left: 12.5%;
+        top: 51.76%;
+        width: calc(100% - 25%);
+        height: 16%;
+        --kb-card-opacity: 0.76;
+        --kb-from-y: 12px;
+        opacity: 0.76;
+        z-index: 4;
+    }
+
+    // ==========================================================
+    // 06 - BOARD OF DIRECTORS
+    // ==========================================================
+
+    .card-directors {
+        left: 17%;
+        top: 64.21%;
+        width: calc(100% - 35%);
+        height: 16%;
+        --kb-card-opacity: 0.66;
+        --kb-from-y: 12px;
+        opacity: 0.66;
+        z-index: 3;
+    }
+
+    // ==========================================================
+    // 07 - DIVIDENDS OVERVIEW
+    // ==========================================================
+
+    .card-dividends {
+        left: 20%;
+        top: 76.57%;
+        width: calc(100% - 42%);
+        height: 16%;
+        --kb-card-opacity: 0.48;
+        --kb-from-y: 12px;
+        opacity: 0.48;
+        z-index: 2;
+
+        .card-title {
+            font-size: 150%;
+            line-height: 120%;
+            white-space: normal;
+        }
+    }
+}
+
+@mixin kb-reveal-step($name, $hide-end, $show-start) {
+    @include login-eased-cycle-reveal(
+        $name,
+        $hide-end,
+        $show-start,
+        (translateY(var(--kb-from-y, 12px))),
+        (translateY(0)),
+        (var(--kb-card-opacity, 1)),
+        false
+    );
+}
+
+@include kb-reveal-step(kb-reveal-at-16, 12%, 24%);
+@include kb-reveal-step(kb-reveal-at-28, 24%, 36%);
+@include kb-reveal-step(kb-reveal-at-40, 36%, 48%);
+@include kb-reveal-step(kb-reveal-at-52, 48%, 60%);
+
+@keyframes kb-reveal-at-64 {
+    0%,
+    52% {
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(20px) scale(0.96);
+    }
+
+    58.5% {
+        visibility: visible;
+        transform: translateY(15.6px) scale(0.969);
+    }
+
+    65% {
+        transform: translateY(10.4px) scale(0.979);
+    }
+
+    71.8% {
+        transform: translateY(5.6px) scale(0.989);
+    }
+
+    79.4% {
+        transform: translateY(2px) scale(0.996);
+    }
+
+    88%,
+    100% {
+        opacity: var(--kb-card-opacity, 1);
+        visibility: visible;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes kb-card-zoom {
+    0% {
+        transform: translateY(0) scale(1);
+    }
+
+    18% {
+        transform: translateY(0) scale(1.03);
+    }
+
+    40% {
+        transform: translateY(0) scale(1.08);
+    }
+
+    62% {
+        transform: translateY(0) scale(1.02);
+    }
+
+    82% {
+        transform: translateY(0) scale(0.985);
+    }
+
+    100% {
+        transform: translateY(0) scale(1);
+    }
+}
+
+// ============================================================
+// RESPONSIVE
+// ============================================================
+
+@media (max-width: 600px) {
+    .knowledge-base {
+        .knowledge-card {
+            .card-title {
+                font-size: 150%;
+            }
+        }
+        .card-knowledge {
+            .card-title {
+                font-size: 150%;
+            }
+            .tools-button {
+                font-size: 60%;
+            }
+        }
+        .card-dividends {
+            .card-title {
+                font-size: 150%;
+            }
+        }
+    }
+}
+
+@media (max-width: 400px) {
+    .knowledge-base {
+        .knowledge-card {
+            .card-title {
+                font-size: 150%;
+            }
+        }
+        .card-knowledge {
+            .card-title {
+                font-size: 150%;
+            }
+            .tools-button {
+                font-size: 80%;
+            }
+        }
+        .card-dividends {
+            .card-title {
+                font-size: 150%;
+            }
+        }
+    }
+}
+
+

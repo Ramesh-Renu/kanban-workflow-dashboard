@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/euroland-logo_square.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="" />
+    <link rel="apple-touch-icon" href="/euroland-logo_square.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>Orion</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script>
+      window._env_load_error = false;
+    </script>
+    <script
+      src="/env-config.js"
+      onerror="window._env_load_error = true;"
+    ></script>
+    <script>
+      // Polyfill global variables for legacy third-party calendar libraries operating in ESM strict mode
+      window.events = undefined;
+      window.isFastClick = undefined;
+      window.menuYearElm = undefined;
+      window.mainHeight = undefined;
+      window.opacityVal = undefined;
+      window.menuElement = undefined;
+    </script>
+    <script type="module" src="/src/index.jsx"></script>
+  </body>
+</html>

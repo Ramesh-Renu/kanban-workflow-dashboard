@@ -1,0 +1,67 @@
+// Application styles only — safe to PurgeCSS in production (vendor.scss is separate)
+@import "@orion/shared/src/styles/variables.scss";
+@import "./components";
+@import "./pages";
+
+body {
+  margin: 0;
+  font-family: $baseFont;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: var(--font-size-sm);
+  font-weight: 400;
+  &::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+    background-color: var(--color-light-light-gray);
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px var(--color-light-light-gray);
+    border-radius: 10px;
+    background-color: var(--color-light-light-gray);
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px var(--color-oldSilver);
+    background-color: var(--color-oldSilver);
+  }
+  * {
+    &::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+      background-color: var(--color-light-light-gray);
+      border-radius: 10px;
+    }
+    &::-webkit-scrollbar-button,
+    &::-webkit-scrollbar-button:single-button,
+    &::-webkit-scrollbar-button:vertical:start:decrement,
+    &::-webkit-scrollbar-button:vertical:end:increment,
+    &::-webkit-scrollbar-button:horizontal:start:decrement,
+    &::-webkit-scrollbar-button:horizontal:end:increment {
+      display: none;
+      width: 0;
+      height: 0;
+      background: transparent;
+    }
+    &::-webkit-scrollbar-track {
+      -webkit-box-shadow: inset 0 0 6px var(--color-light-light-gray);
+      border-radius: 10px;
+      background-color: var(--color-light-light-gray);
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      -webkit-box-shadow: inset 0 0 6px var(--color-oldSilver);
+      background-color: var(--color-oldSilver);
+    }
+  }
+}
+
+.input-error {
+  border: 1px solid red !important;
+}
+
+.mandatory {
+  margin-left: 3px;
+  color: $color-light-red;
+}

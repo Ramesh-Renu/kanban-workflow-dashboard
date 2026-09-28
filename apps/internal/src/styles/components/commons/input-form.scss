@@ -1,0 +1,29 @@
+// FLOATING LABEL CUSTOMIZED
+.form-floating {
+  label {
+    height: unset;
+  }
+  .form-control,
+  .form-control-plaintext,
+  .form-select {
+    height: auto;
+    min-height: unset;
+    line-height: 18px;
+  }
+  .form-control:focus,
+  .form-control:not(:placeholder-shown),
+  .form-control-plaintext:focus,
+  .form-control-plaintext:not(:placeholder-shown) {
+    padding: 1rem 0.75rem;
+  }
+  .form-control:focus ~ label,
+  .form-control:not(:placeholder-shown) ~ label,
+  .form-control-plaintext ~ label,
+  .form-select ~ label {
+    transform: scale(0.85) translateY(-1.8rem) translateX(0rem);
+  }
+  :focus {
+    border-color: unset;
+    box-shadow: unset;
+  }
+}

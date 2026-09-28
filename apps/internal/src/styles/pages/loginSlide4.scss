@@ -1,0 +1,542 @@
+@use "sass:math";
+
+// ============================================================
+// SVG 582 x 501 -> HTML / SCSS
+// Progress fill travels LEFT → RIGHT on individual segments.
+// Sequential timing lives in per-segment keyframes so the loop
+// can reset together (animation-delay only applies on first run).
+// ============================================================
+
+$progress-segment-count: 48;
+$progress-complete-count: 34;
+$progress-fill-end: 70;
+$progress-hold-end: 86;
+$progress-track: #DEEBFF;
+
+@for $i from 1 through $progress-complete-count {
+    $appear-start: math.div($i - 1, $progress-complete-count) * $progress-fill-end;
+    $appear-done: math.min(
+        $progress-hold-end,
+        $appear-start + math.div($progress-fill-end, $progress-complete-count) * 2.4
+    );
+
+    @keyframes task-progress-seg-#{$i} {
+        0%,
+        #{$appear-start * 1%} {
+            background: $progress-track;
+        }
+
+        #{$appear-done * 1%},
+        100% {
+            background: var(--color-primary);
+        }
+    }
+}
+
+.login-task-slide {
+    --dashboard-cycle: 4.5s;
+    --task-from-x: 0cqw;
+    --task-from-y: -14cqh;
+    --task-rotate: 0deg;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.45s ease;
+
+    &.is-active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    &__frame {
+        position: relative;
+        width: 100%;
+        overflow: visible;
+        container-type: inline-size;
+        container-name: task-frame;
+    }
+
+    .task-reveal-from-top {
+        --task-from-x: 0cqw;
+        --task-from-y: -16cqh;
+    }
+
+    .today-task-card.task-reveal-from-top {
+        --task-from-y: -110%;
+    }
+
+    .task-from-box {
+        --task-from-x: 0cqw;
+        --task-from-y: 36cqh;
+    }
+
+    .task-reveal-from-left-bottom {
+        --task-from-x: -18cqw;
+        --task-from-y: 12cqh;
+    }
+
+    &:not(.is-static) .task-stagger-item {
+        visibility: hidden;
+        opacity: 0;
+        transform: translate(var(--task-from-x), var(--task-from-y)) rotate(var(--task-rotate));
+    }
+
+    $reveal-steps: 16, 24, 32, 42, 52, 54;
+
+    @each $pct in $reveal-steps {
+        &.is-active:not(.is-static) .task-reveal-at-#{$pct} {
+            animation: task-reveal-at-#{$pct} var(--dashboard-cycle) linear forwards;
+        }
+    }
+
+    &.is-active.is-paused:not(.is-static) .task-stagger-item,
+    &.is-active.is-paused:not(.is-static) .progress-segment.is-complete:nth-child(n) {
+        animation-iteration-count: 1;
+        animation-fill-mode: forwards;
+    }
+
+    @for $i from 1 through $progress-complete-count {
+        &.is-active:not(.is-static) .progress-segment.is-complete:nth-child(#{$i}) {
+            animation-name: task-progress-seg-#{$i};
+            animation-duration: var(--dashboard-cycle);
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            animation-fill-mode: both;
+            animation-delay: #{($i - 1) * 0.001}s;
+        }
+    }
+
+    &.is-static.is-active .task-stagger-item {
+        animation: none;
+        visibility: visible;
+        opacity: 1;
+        transform: translate(0cqw, 0cqh) rotate(var(--task-rotate, 0deg));
+    }
+
+    &.is-static.is-active .progress-segment.is-complete {
+        animation: none;
+        background: var(--color-primary);
+    }
+}
+
+.task-widget {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 582 / 501;
+    container-type: size;
+    container-name: task-widget;
+    font-size: 4.47cqw;
+    color: #06266c;
+
+    .task-widget-bg {
+        position: absolute;
+        left: 18%;
+        top: 4.87%;
+        width: 74.66%;
+        height: 79.62%;
+        z-index: 0;
+        border-radius: 12.2% 12.2% 0 0 / 13.3% 13.3% 0 0;
+        box-shadow: 0px 0px 24.42px 0px #ffffffb8;
+        box-shadow: 0px 12.72px 30.53px 0px #5390eb24 inset;
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        pointer-events: none;
+    }
+
+    .gradient-box {
+        position: absolute;
+        z-index: 1;
+        width: 3.2cqw;
+        aspect-ratio: 1 / 1;
+        border-radius: 18%;
+        background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.98) 0%,
+            rgba(221, 233, 253, 0.915) 25%,
+            rgba(181, 207, 252, 0.85) 50%,
+            rgba(135, 177, 249, 0.785) 75%,
+            rgba(81, 142, 247, 0.72) 100%
+        );
+        pointer-events: none;
+
+        &--left {
+            left: 25.1%;
+            top: 20%;
+        }
+
+        &--right {
+            left: 80.04%;
+            top: 20%;
+        }
+    }
+
+    .top-task {
+        position: absolute;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        padding: 0 2.5%;
+        background: #FCFEFFD1;
+        border: 1px solid rgba(255, 255, 255, 0.96);
+        box-shadow: 0 8px 22px rgba(8, 43, 69, 0.1);
+
+        .task-check {
+            flex: 0 0 auto;
+            display: grid;
+            place-items: center;
+            width: 3.61cqw;
+            height: 3.61cqw;
+            border-radius: 50%;
+            background: linear-gradient(180deg, var(--color-primary) 0%, #65a2ff 100%);
+            box-shadow: 0 2px 8px rgba(0, 173, 240, 0.28);
+            margin: 0;
+            svg {
+                width: 58%;
+                height: 58%;
+                display: block;
+            }
+        }
+
+        .top-task-label {
+            flex: 1 1 auto;
+            margin-left: 3.6%;
+            font-size: 60%;
+            font-weight: 600;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+            color: #06266c;
+            white-space: nowrap;
+        }
+
+        &.task-1 {
+            --task-rotate: 2.55deg;
+            --task-from-x: 2cqw;
+            --task-from-y: 44.8cqh;
+            left: 30.2%;
+            top: 11.5%;
+            width: 46.2%;
+            height: 10%;
+            border-radius: 999px;
+            transform: rotate(var(--task-rotate));
+            z-index: 3;
+        }
+
+        &.task-2 {
+            --task-rotate: -2.15deg;
+            --task-from-x: 4cqw;
+            --task-from-y: 37cqh;
+            left: 26.6%;
+            top: 21%;
+            width: 49.4%;
+            height: 10%;
+            border-radius: 999px;
+            transform: rotate(var(--task-rotate));
+            z-index: 4;
+        }
+
+        &.task-3 {
+            --task-rotate: 2.45deg;
+            --task-from-x: -0.2cqw;
+            --task-from-y: 27.6cqh;
+            left: 36.4%;
+            top: 31%;
+            width: 38.2%;
+            height: 10%;
+            border-radius: 999px;
+            transform: rotate(var(--task-rotate));
+            z-index: 5;
+        }
+    }
+
+    .today-task-clip {
+        position: absolute;
+        left: 18%;
+        top: 4.87%;
+        width: 74.66%;
+        height: 79.62%;
+        z-index: 20;
+        overflow: hidden;
+        pointer-events: none;
+        isolation: isolate;
+    }
+
+    .today-task-card {
+        position: absolute;
+        left: 0;
+        top: 45.41%;
+        width: 100%;
+        height: 56.09%;
+        z-index: 21;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        padding: 8% 7% 7%;
+        background: #FAFDFFA8;
+        box-shadow: 0 14px 36px rgba(8, 43, 69, 0.12);
+        z-index: 21;
+        .today-task-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 28%;
+            margin: 0;
+            .today-task-title {
+                font-size: 130%;
+                font-weight: 700;
+                line-height: 150%;
+                color: var(--color-dark-primary);
+                letter-spacing: -0.02em;
+                margin: 0;
+            }
+
+            .plus-button {
+                position: relative;
+                flex: 0 0 auto;
+                display: grid;
+                place-items: center;
+                width: 8.22cqw;
+                height: 8.22cqw;
+                border: 0;
+                padding: 0;
+                border-radius: 50%;
+                background: #FFFFFFBD;
+                box-shadow: 0 4px 12px rgba(35, 117, 243, 0.12);
+                color: #082B45;
+                cursor: default;
+                font-size: 120%;
+                font-weight: 300;
+                line-height: 120%;
+                appearance: none;
+
+                &::before,
+                &::after {
+                    content: none;
+                    display: none;
+                }
+            }
+        }
+
+        .progress-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            margin-top: auto;
+
+            .progress-header {
+                display: flex;
+                align-items: baseline;
+                justify-content: space-between;
+                margin-bottom: 2.4cqh;
+            }
+
+            .progress-label {
+                font-size: 52%;
+                font-weight: 500;
+                color: #48689C;
+            }
+
+            .progress-value {
+                font-size: 52%;
+                font-weight: 600;
+                color: #001833;
+            }
+
+            .progress-bar {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                align-items: stretch;
+                justify-content: space-between;
+                gap: 0.45%;
+                width: 100%;
+                height: 8.53cqh;
+                overflow: visible;
+                background: transparent;
+
+                .progress-segment {
+                    flex: 1 1 0;
+                    width: 0;
+                    min-width: 0;
+                    height: 100%;
+                    border-radius: 999px;
+                    background: $progress-track;
+                    box-shadow: 0 1px 2px rgba(8, 43, 69, 0.08);
+                }
+            }
+        }
+    }
+
+    .clock-button {
+        position: absolute;
+        left: 88.32%;
+        top: 0%;
+        z-index: 22;
+        width: 8.25%;
+        aspect-ratio: 1 / 1;
+        display: grid;
+        place-items: center;
+        padding: 0;
+        border: 0;
+        border-radius: 25%;
+        background: #fff;
+        box-shadow: 0 8px 20px rgba(31, 104, 174, 0.18);
+        color: var(--color-primary);
+        cursor: default;
+
+        .clock-button__icon {
+            width: 58%;
+            height: 58%;
+            display: block;
+        }
+    }
+
+    .timesheet-card {
+        position: absolute;
+        left: 4.12%;
+        top: 83.12%;
+        z-index: 22;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        box-sizing: border-box;
+        width: 37.46%;
+        height: 9.98%;
+        padding: 0 2.4% 0 1.8%;
+        border-radius: 16px;
+        background: var(--color-white);
+        border: 1px solid #e6eef8;
+        box-shadow: 0 8px 18px rgba(8, 43, 69, 0.1);
+
+        .timesheet-icon {
+            flex: 0 0 auto;
+            width: 12.8%;
+            aspect-ratio: 1 / 1;
+            display: grid;
+            place-items: center;
+
+            svg {
+                width: 100%;
+                height: 100%;
+                display: block;
+            }
+        }
+
+        .timesheet-copy {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            margin-left: 3.2%;
+            min-width: 0;
+            line-height: 1.15;
+        }
+
+        .timesheet-brand {
+            font-size: 55%;
+            font-weight: 700;
+            color: #082b45;
+        }
+
+        .timesheet-label {
+            font-size: 35%;
+            font-weight: 400;
+            color: var(--color-silver);
+        }
+
+        .new-badge {
+            margin-left: auto;
+            flex: 0 0 auto;
+            padding: 1.6% 3.8%;
+            border-radius: 999px;
+            background: #edf5ff;
+            color: var(--color-primary);
+            font-size: 38%;
+            font-weight: 600;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+    }
+}
+
+@mixin task-from-box-slide($name, $hide-end, $show-start) {
+    $span: $show-start - $hide-end;
+
+    @keyframes #{$name} {
+        0%,
+        #{$hide-end} {
+            opacity: 1;
+            visibility: hidden;
+            transform: translate(var(--task-from-x), var(--task-from-y)) rotate(var(--task-rotate, 0deg));
+        }
+
+        #{$hide-end + $span * 0.04} {
+            visibility: visible;
+            opacity: 1;
+            transform: translate(calc(var(--task-from-x) * 0.92), calc(var(--task-from-y) * 0.92))
+                rotate(var(--task-rotate, 0deg));
+        }
+
+        #{$hide-end + $span * 0.22} {
+            transform: translate(calc(var(--task-from-x) * 0.62), calc(var(--task-from-y) * 0.62))
+                rotate(var(--task-rotate, 0deg));
+        }
+
+        #{$hide-end + $span * 0.42} {
+            transform: translate(calc(var(--task-from-x) * 0.34), calc(var(--task-from-y) * 0.34))
+                rotate(var(--task-rotate, 0deg));
+        }
+
+        #{$hide-end + $span * 0.64} {
+            transform: translate(calc(var(--task-from-x) * 0.14), calc(var(--task-from-y) * 0.14))
+                rotate(var(--task-rotate, 0deg));
+        }
+
+        #{$hide-end + $span * 0.84} {
+            transform: translate(calc(var(--task-from-x) * 0.04), calc(var(--task-from-y) * 0.04))
+                rotate(var(--task-rotate, 0deg));
+        }
+
+        #{$show-start},
+        100% {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(0cqw, 0cqh) rotate(var(--task-rotate, 0deg));
+        }
+    }
+}
+
+@mixin task-reveal-step($name, $hide-end, $show-start) {
+    @include login-eased-cycle-reveal(
+        $name,
+        $hide-end,
+        $show-start,
+        (translate(var(--task-from-x, 0cqw), var(--task-from-y, -16cqh)) rotate(var(--task-rotate, 0deg))),
+        (translate(0cqw, 0cqh) rotate(var(--task-rotate, 0deg)))
+    );
+}
+
+@include task-reveal-step(task-reveal-at-16, 12%, 24%);
+@include task-reveal-step(task-reveal-at-24, 18%, 30%);
+@include task-from-box-slide(task-reveal-at-32, 30%, 42%);
+@include task-from-box-slide(task-reveal-at-42, 42%, 54%);
+@include task-from-box-slide(task-reveal-at-54, 54%, 66%);
+@include task-reveal-step(task-reveal-at-52, 48%, 60%);
+
+@media (prefers-reduced-motion: reduce) {
+    .login-task-slide.is-active .progress-segment.is-complete {
+        animation: none;
+        background: var(--color-primary);
+    }
+
+    .login-task-slide.is-active .task-stagger-item {
+        animation: none;
+        visibility: visible;
+        opacity: 1;
+        transform: translate(0cqw, 0cqh) rotate(var(--task-rotate, 0deg));
+    }
+}

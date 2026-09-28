@@ -1,0 +1,82 @@
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 0px;
+  height: 95vh;
+
+  &-content {
+    max-width: 600px;
+    width: 100%;
+
+    .error-code {
+      font-size: 120px;
+      font-weight: 500;
+      color: $color-light-red;
+      line-height: 110px;
+      margin: 0 0 15px;
+    }
+    .error-message {
+      font-size: 32px;
+      color: $color-gray;
+      margin-bottom: 20px;
+    }
+
+    .error-description {
+      font-size: var(--font-size-lg);
+      color: $color-darkLiver;
+      margin-bottom: 30px;
+    }
+    .error-description-access {
+      font-size: var(--font-size-md);
+      color: $color-oldSilver;
+      margin: auto;
+    }
+
+    &-button {
+      display: inline-block;
+      padding: 12px 24px;
+      font-size: var(--font-size-lg);
+      font-weight: bold;
+      text-decoration: none;
+      color: $color-white;
+      background-color: $color-primary-dark;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: $color-darkLiver;
+      }
+    }
+  }
+}
+
+.connection-error {
+  &__tips {
+    text-align: left;
+    max-width: 520px;
+    margin: 0 auto 24px;
+    padding-left: 20px;
+    line-height: 1.5;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+  }
+
+  &__secondary {
+    background-color: $color-light-light-gray;
+    color: $color-darkLiver;
+
+    &:hover {
+      background-color: $color-oldSilver;
+    }
+  }
+}

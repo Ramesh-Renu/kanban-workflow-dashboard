@@ -1,0 +1,50 @@
+.popupModal {
+  h5 {
+    color: var(--color-black);
+  }
+  .modalActions {
+    button {
+      border-radius: 8px;
+      min-width: 100px;
+      font-weight: bold;
+    }
+
+    .modalDelete_btn {
+      background-color: var(--color-light-red);
+      color: var(--color-white);
+    }
+
+    .modalCancel_btn {
+      background-color: var(--color-light-light-gray);
+      color: var(--color-light-black-2);
+    }
+  }
+}
+
+// Scoped to PopupModal only — do not use bare .modal-dialog (affects every Bootstrap modal).
+.orion-shared-popup-modal {
+  .modal-content {
+    .modal-header {
+      background: linear-gradient(180deg, #e4f6ff 0%, #e7ebff 100%);
+      background-size: cover;
+      background-position: left;
+      background-repeat: no-repeat;
+
+      .modal-title {
+        font-size: var(--font-size-xl);
+        font-weight: 600;
+        color: var(--color-black);
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-break: break-all;
+      }
+    }
+  }
+
+  &__header-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+}

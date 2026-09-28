@@ -1,0 +1,157 @@
+// ============================================================
+// PAGE
+// ============================================================
+
+.orion-page {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  padding: 26px 26px;
+  background-color: #f3f9fd;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  max-width: 1500px;
+  margin: 0 auto;
+
+  // ==========================================================
+  // MAIN CONTENT
+  // ==========================================================
+
+  .orion-content {
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  // ==========================================================
+  // CONTENT INNER CONTAINER
+  // ==========================================================
+
+  .orion-content__inner {
+    width: 100%;
+    max-width: 1484px;
+    margin: 0 auto 20px;
+    padding: 0px 26px 0 0;
+    min-height: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
+    max-height: calc(100vh - 180px);
+  }
+
+  // ==========================================================
+  // BACK TO DASHBOARD
+  // ==========================================================
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    height: 15px;
+    margin: 0 0 25px;
+    padding: 0;
+    color: #082b45;
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 15px;
+    text-decoration: none;
+    gap: 6px;
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: #082b45;
+      text-decoration: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid rgba(49, 130, 206, 0.35);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    .back-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: auto;
+      height: auto;
+      margin: 0;
+      padding: 0;
+      font-size: 14px;
+      line-height: 1;
+    }
+  }
+
+  // ==========================================================
+  // PAGE TITLE
+  // ==========================================================
+
+  h1 {
+    width: auto;
+    height: auto;
+    margin: 0 0 25px;
+    padding: 0;
+    color: #082b45;
+    font-family: "Inter", sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 40.5px;
+    letter-spacing: -0.94px;
+    white-space: nowrap;
+  }
+
+  // ==========================================================
+  // DESCRIPTION
+  // ==========================================================
+
+  .description {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .description p {
+    width: 100%;
+    text-align: justify;
+    margin: 0 0 14px;
+    padding: 0;
+    color: #677483;
+    font-family: "Inter", sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 25.84px;
+    letter-spacing: -0.25px;
+
+    /*
+     * Make sure Bootstrap/browser paragraph styles don't
+     * introduce additional spacing.
+     */
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  // ==========================================================
+  // BLUE HIGHLIGHT TEXT
+  // ==========================================================
+
+  .highlight-text {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    color: #00a3ff;
+    font-weight: 500;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      color: #008edb;
+      text-decoration: underline;
+    }
+  }
+}

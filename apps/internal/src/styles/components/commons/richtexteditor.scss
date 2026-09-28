@@ -1,0 +1,189 @@
+.ql-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%;
+  .ql-title {
+    color: $color-oldSilver;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    margin: 0;
+  }
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  border-bottom: unset !important;
+  // .ql-options{
+  //     display: flex;
+  //     .ql-formats{
+  //         display: inline-flex;
+  //         gap:8px;
+
+  //         [class^="icon-"] {
+  //             width: 24px;
+  //             height: 24px;
+  //         }::before{
+  //             font-size: var(--font-size-sm);
+  //         }
+  //     }
+  // }
+  .ql-options {
+    .ql-formats {
+      padding: 0px 10px;
+      margin: unset !important;
+      // border-right: 1px solid #ccc;
+    }
+    > :not(:last-child) {
+      border-right: 1px solid $color-light-light-gray;
+    }
+  }
+}
+::after {
+  content: unset !important;
+}
+.quill {
+  .ql-container {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+  .ql-tooltip {
+    left: 0 !important;
+  }
+  .ql-mention-list-container {
+    .ql-mention-list {
+      list-style: none;
+      margin: auto;
+      max-height: 200px;
+      overflow-y: auto;
+      padding: 0px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      background: $color-white;
+      li {
+        color: $color-primary-dark;
+        padding: 8px 16px;
+        border: 0;
+        cursor: pointer;
+      }
+      li:hover {
+        background-color: $color-light-ghost-white;
+      }
+      .mention-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .profile-image {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        column-gap: 0;
+        width: 25px;
+        height: 25px;
+        overflow: hidden;
+        border-radius: 50%;
+        fill: $color-white;
+        border: 1px solid $color-primary;
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          word-break: break-all;
+        }
+        .userNull-image {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          color: $color-white;
+        }
+      }
+    }
+  }
+}
+.focused {
+  .ql-container {
+    .ql-editor {
+      min-height: 140px;
+      max-height: 400px;
+    }
+  }
+}
+.ql-container {
+  .ql-editor {
+    max-height: 400px;
+  }
+}
+.attachmentExist {
+  .ql-container {
+    border-radius: unset;
+  }
+}
+.comment-attachment {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+  // border-left: 1px solid #ccc;
+  // border-bottom-left-radius: 6px;
+  // border-bottom-right-radius: 6px;
+  // border-right: 1px solid #ccc;
+  gap: 5px;
+  padding: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  .title {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: $color-oldSilver;
+  }
+  &-data {
+    font-size: var(--font-size-md);
+    font-weight: 500;
+    padding: 4px 6px;
+    display: inline-flex;
+    gap: 5px;
+    border-radius: 5px;
+    align-items: center;
+    border: 1px solid #ccc;
+    background-color: $color-light-gray;
+    color: $color-darkLiver;
+    .name {
+      font-size: var(--font-size-xs);
+    }
+    .icon-failure-cross {
+      cursor: pointer;
+    }
+  }
+}
+
+.ql-editor.ql-blank::before {
+  font-size: var(--font-size-sm) !important;
+  font-weight: 400 !important;
+  line-height: 18px !important;
+  color: $color-light-gray-7 !important;
+}
+
+.ql-toolbar.ql-snow,
+.ql-container.ql-snow {
+  border: none !important;
+  width: 100%;
+  // @media screen and (max-width: 1300px) {
+  //   width: 75%;
+    
+  // }
+}
+.defaultExist {
+  border: 1px solid $color-primary-light-1;
+  border-radius: 8px;
+}
+.attachmentExist {
+  width: 100%;
+  position: relative;
+  border: 1px solid $color-primary-light-1;
+  border-radius: 8px;
+}
+
+.ql-editor {
+  padding: 16px 30px 16px 15px !important;
+}

@@ -1,0 +1,86 @@
+$loader--width: 230px;
+$loader-dot--size: 10px;
+
+.loading-main {
+  position: fixed;
+  bottom: 100px;
+  right: 0px;
+  width: 250px;
+  height: 60px;
+  padding: 10px 10px 10px 20px;
+  background-color: $color-primary-dark-180;
+  border-radius: 40px 0px 0px 40px;
+  z-index: 1000;
+  .loading-container {
+    display: flex;
+    flex-direction: row;
+    .loading-text {
+      display: block;
+      .letter {
+        color: $color-white;
+        font-size: var(--font-size-md);
+      }
+    }
+    .loader {
+      height: $loader-dot--size;
+      width: $loader--width;
+      position: absolute;
+      bottom: 10px;
+      right: 0;
+      margin: auto;
+      display: block;
+      &--dot {
+        animation: loader ease-in-out 3s infinite;
+        -webkit-animation: loader ease-in-out 3s infinite;
+        -moz-animation: loader ease-in-out 3s infinite;
+        -o-animation: loader ease-in-out 3s infinite;
+        height: $loader-dot--size;
+        width: $loader-dot--size;
+        border-radius: 100%;
+        background-color: transparent;
+        position: absolute;
+        /*border: 1px solid $color-white;*/
+
+        &:first-child {
+          background-color: $color-light-green;
+          animation-delay: 0.5s;
+        }
+        &:nth-child(2) {
+          background-color: $color-purple;
+          animation-delay: 0.4s;
+        }
+        &:nth-child(3) {
+          background-color: $color-red;
+          animation-delay: 0.3s;
+        }
+        &:nth-child(4) {
+          background-color: $color-orange;
+          animation-delay: 0.2s;
+        }
+        &:nth-child(5) {
+          background-color: $color-yellow;
+          animation-delay: 0.1s;
+        }
+        &:nth-child(6) {
+          background-color: $color-blue-2;
+          animation-delay: 0s;
+        }
+      }
+    }
+  }
+}
+
+@keyframes loader {
+  15% {
+    transform: translateX(0);
+  }
+  45% {
+    transform: translateX($loader--width - $loader-dot--size);
+  }
+  65% {
+    transform: translateX($loader--width - $loader-dot--size);
+  }
+  95% {
+    transform: translateX(0);
+  }
+}

@@ -1,0 +1,26 @@
+# Exclude node modules and local dependencies
+node_modules/
+**/node_modules/
+
+# Exclude git and environments
+.git/
+.github/
+.vscode/
+.idea/
+
+# Exclude developer environment files
+.env.development
+.env.testing
+.env.beta
+.env.analyze
+.env.production.clone
+
+# Exclude logs and reports
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm/
+.yarn/
+tmp/
+dist/

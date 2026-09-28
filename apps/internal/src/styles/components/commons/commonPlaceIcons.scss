@@ -1,0 +1,123 @@
+.commonPlaceIcons {
+  position: absolute;
+  background: transparent;
+  overflow: hidden;
+  z-index: 1;
+  img {
+    position: absolute;
+    // background: $color-white;
+    z-index: 1;
+  }
+}
+
+.react-dropdown-select.filter-select-dropDown {
+  min-height: 40px;
+  border-radius: 6px;
+  padding: 3px 10px 3px 25px;
+  background: $color-white;
+  border: 1px solid rgb(210, 210, 210, 0.5);
+  .react-dropdown-select-input::placeholder {
+    color: $color-light-light-gray-6;
+  }
+  .react-dropdown-select-dropdown {
+    border-radius: 6px;
+    
+    .dropdwonList-main {
+      padding: 12px;
+
+      .dropdwonList-search {
+        width: 100%;
+        padding: 13px 33px 13px 12px;
+        border-radius: 8px;
+        border: 1px solid $color-light-light-gray;
+        background: $color-white;
+        font-size: 13px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        color: $color-light-black-2;
+        &::placeholder {
+          color: $color-light-black-2;
+          font-size: 13px;
+          font-style: normal;
+          font-weight: 400;
+          opacity: 0.75;
+          line-height: normal;
+        }
+      }
+      .dropdwonLists {
+        .dropdwonLists-label {
+          margin: 8px 0;
+          padding: 8px 8px;
+          font-size: var(--font-size-sm);
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          column-gap: 8px;
+          color: $color-light-black-2;
+          .checkbox-img {
+            width: 16px;
+            height: 100%;
+          }
+          label {
+            font-size: var(--font-size-sm);
+            font-weight: 400;
+            line-height: 18px;
+            color: $color-light-black-2;
+          }
+          &.active {
+            background: $color-bg-board;
+            border-bottom: 5px;
+            border-radius: 5px;
+            label {
+              font-weight: 500;
+              color: $color-primary;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.input-type {
+  font-size: var(--font-size-sm);
+  padding: 9px 30px 9px 15px;
+  border-radius: 6px;
+  border: 1px solid var(--color-light-light-gray);
+  color: var(--color-oldSilver);
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  position: relative;
+  &::placeholder {
+    color: var(--color-light-gray-1);
+    font-size: var(--font-size-xs);
+  }
+}
+
+.dropdwonList-search {
+  width: 100%;
+  padding: 13px 33px 13px 12px;
+  border-radius: 8px;
+  border: 1px solid $color-light-light-gray;
+  background: $color-white;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  color: $color-gray;
+  &::placeholder {
+    color: $color-oldSilver;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    opacity: 0.75;
+    line-height: normal;
+  }
+}

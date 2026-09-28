@@ -1,0 +1,124 @@
+/* Orders/Tasks Kanban view embedded in the board dashboard — reuses KanbanHome as-is. */
+.dashboard-orders-kanban {
+  /* Contain board width so columns scroll inside the card — not the whole page. */
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: auto;
+  overflow-x: hidden;
+  overflow-y: visible;
+  box-sizing: border-box;
+
+  .work-allocation {
+    display: none;
+  }
+
+  .filterComponent {
+    display: none;
+  }
+
+  .kanaban-body-content,
+  .kanban-board-wrap {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* No per-column vertical scroll — grow with content; page scrolls instead. */
+  .kanban-column {
+    margin: 0;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .kanban-card-container {
+    height: auto !important;
+    max-height: calc(100vh - 220px);
+    min-height: 120px;
+    min-width: 280px;
+    overflow: hidden;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+  }
+
+  .kanban-column-load-more-sentinel {
+    width: 100%;
+    height: 1px;
+    flex-shrink: 0;
+    pointer-events: none;
+  }
+
+  .boardContentArea__end {
+    display: block;
+    padding: 10px;
+    text-align: center;
+    font-size: var(--font-size-xs, 12px);
+    font-weight: 400;
+    color: var(--color-light-black-2);
+    opacity: 0.7;
+  }
+
+  /* Horizontal stage scroll stays on the board row only. */
+  .kanbanContainer {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    padding-top: 8px;
+    
+  }
+
+  /* Stage scroll thumb — inline under the board (not fixed/clipped against the viewport). */
+  .dashboard-page__order-tools-scroll-content.kanban-board-scroll-content {
+    position: relative;
+    bottom: auto;
+    right: auto;
+    left: auto;
+    z-index: 2;
+    align-self: flex-end;
+    margin: 0px 0 0 auto;
+    max-width: 100%;
+    width: fit-content;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-shrink: 0;
+  }
+
+  .customKanabnLoader {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100%;
+    right: 0;
+  }
+}
+
+.dashboard-orders-kanban__empty {
+  padding: 24px 0;
+  text-align: center;
+  font-size: var(--font-size-sm, 13px);
+  color: var(--color-light-black-2);
+}
+
+/* Full-bleed heatmap / IOD orders rows — kill leftover 2-col grid gap. */
+.dashboard-page__content.task-dashboard-content--heatmap-row,
+.dashboard-page__content.task-dashboard-content-second-first-row {
+  grid-template-columns: minmax(0, 1fr) !important;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+}

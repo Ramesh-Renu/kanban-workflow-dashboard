@@ -1,0 +1,287 @@
+.rdtPicker {
+  background-color: $color-light-gray !important;
+  padding: 12px 8px !important;
+  border-radius: 24px !important;
+  border: 1px solid $color-light-light-gray !important;
+  box-shadow: -2px 0px 7px 2px $color-light-light-gray !important;
+  margin: 8px 0 0 !important;
+  td,
+  .rdtPicker th {
+    padding: 10px;
+    position: relative;
+  }
+  th {
+    font-size: var(--font-size-sm);
+  }
+  td {
+    font-size: var(--font-size-sm);
+  }
+  th {
+    border-bottom: none !important;
+    font-weight: 500 !important;
+  }
+  thead tr:last-child th {
+    padding-top: 15px !important;
+  }
+  thead tr:last-child th:first-child {
+    padding-left: 25px !important;
+  }
+  .button-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    &__left {
+      margin-right: auto; /* pushes right group to end */
+    }
+
+    &__right {
+      display: flex;
+      gap: 10px;
+    }
+  }
+  thead tr:last-child th:last-child {
+    padding-right: 25px !important;
+  }
+  tbody tr td:first-child {
+    padding-left: 25px !important;
+  }
+  tbody tr td:last-child {
+    padding-right: 25px !important;
+  }
+  .rdtNext span,
+  .rdtPrev span {
+    font-size: var(--font-size-5xl) !important;
+    line-height: 20px !important;
+    font-weight: 400 !important;
+  }
+  .rdtTimeToggle {
+    padding: 8px 4px !important;
+  }
+  .time-picker-wrapper {
+    padding: 5px 25px 5px 15px !important;
+  }
+  .rdtDay.rdtActive {
+    position: relative !important;
+  }
+  td.rdtActive:hover,
+  td.rdtActive {
+    background-color: transparent !important;
+  }
+  td.rdtActive:after {
+    content: "" !important;
+    display: inline-block !important;
+    background-color: $color-primary-dark !important;
+    position: absolute !important;
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 50px !important;
+    z-index: -1 !important;
+    left: 5px !important;
+    right: 3px !important;
+    top: 6px !important;
+    text-shadow: 0.5px 0px 0px $color-light-ghost-white !important;
+  }
+  tbody tr td.rdtActive:last-child:after {
+    left: 5px !important;
+  }
+  tbody tr td.rdtActive:first-child:after {
+    left: 19px !important;
+  }
+  .button-container button {
+    font-size: 13px !important;
+    font-weight: 400 !important;
+    line-height: 15.73px !important;
+    text-align: center !important;
+    padding: 4px 8px !important;
+    border-radius: 6px !important;
+  }
+  .rdtMonths tbody tr td.rdtMonth.rdtActive:after {
+    height: 25px !important;
+    width: 43px !important;
+    border-radius: 6px !important;
+    top: 13px !important;
+    margin: auto;
+  }
+  .rdtMonths tbody tr td.rdtMonth.rdtActive:last-child:after {
+    right: 13px !important;
+    left: 0 !important;
+  }
+  .rdtMonths tbody tr td.rdtMonth.rdtActive:first-child:after {
+    left: 16px !important;
+    right: 0 !important;
+  }
+  .rdtYears tbody tr td.rdtYear.rdtActive:after {
+    background-color: $color-primary-dark !important;
+    top: 11px !important;
+    height: 30px !important;
+    width: 45px !important;
+    border-radius: 6px !important;
+  }
+  td.rdtDisabled {
+    position: relative;
+    .disabled-date-error-show {
+      display: block;
+      position: absolute;
+      max-width: 200px;
+      min-width: 100px;
+      width: fit-content;
+      font-size: var(--font-size-xs);
+      text-align: left;
+      text-transform: none;
+      border-radius: 12px;
+      background: $color-white;
+      box-shadow: -1px 3px 10px 6px rgba(27, 31, 53, 0.12);
+      padding: 8px;
+      z-index: 1000;
+      color: $color-red;
+    }
+    &:last-child {
+      .disabled-date-error-show {
+        right: 0;
+      }
+    }
+  }
+  .rdtDay.rdtToday.rdtDisabled:after {
+    content: "" !important;
+    display: inline-block !important;
+    background-color: $color-light-light-gray !important;
+    position: absolute !important;
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 50px !important;
+    z-index: -1 !important;
+    left: 5px !important;
+    right: 3px !important;
+    top: 6px !important;
+    text-shadow: 0.5px 0px 0px $color-light-ghost-white !important;
+  }
+}
+.calendar-position-top .rdtPicker {
+  bottom: 100%;
+  top: auto;
+  margin-bottom: 10px !important;
+}
+
+.calendar-position-bottom .rdtPicker {
+  top: 100%;
+  bottom: auto;
+  margin-top: 10px !important;
+}
+
+.calendar-position-auto .rdtPicker {
+  top: auto;
+  bottom: auto;
+}
+.picker-date [class^="calendar-position-"] .icon-ss-calendar {
+  display: block;
+  position: absolute;
+  right: 8px;
+  top: 10px;
+  font-size: var(--font-size-xl);
+  z-index: 0;
+  &:before {
+    color: var(--color-oldSilver);
+  }
+}
+
+.disabled {
+  .calendar-position-auto {
+    input {
+      opacity: 0.5;
+      background-color: var(--color-white);
+    }
+  }
+}
+.monthly-calendor {
+  position: relative;
+  min-height: 220px;
+  width: fit-content;
+  .rdtPicker {
+    min-height: 220px;
+    width: fit-content;
+    .rdtYears,
+    .rdtMonths {
+      padding: 0px 10px;
+      table {
+        width: 100%;
+        thead tr:last-child th:first-child {
+          padding-top: 0px !important;
+          text-align: center;
+        }
+        thead tr:last-child th:last-child {
+          padding-top: 0px !important;
+          text-align: center;
+        }
+        tbody tr td:last-child {
+          padding-right: 10px !important;
+        }
+        tbody tr td:first-child {
+          padding-left: 10px !important;
+        }
+        .rdtSwitch {
+          text-align: center;
+          width: 50%;
+          cursor: pointer;
+          padding-top: 0px !important;
+          &:hover {
+            background-color: var(--color-light-light-gray);
+          }
+        }
+        .rdtPrev,
+        .rdtNext {
+          width: 25%;
+          &:hover {
+            background-color: var(--color-light-light-gray);
+          }
+        }
+        .rdtPrev,
+        .rdtNext,
+        .rdtYear,
+        .rdtMonth {
+          cursor: pointer;
+        }
+        .rdtDisabled {
+          opacity: 0.5;
+        }
+        .rdtMonth.rdtDisabled {
+          cursor: default;
+        }
+      }
+    }
+  }
+  .rdtPicker td.rdtActive.start-month:hover,
+  .rdtPicker td.rdtActive.start-month {
+    background: $color-blue !important;
+    color: $color-white !important;
+    border-radius: 6px;
+  }
+
+  .end-month.middle-month {
+    background: $color-dark-green !important;
+    color: $color-white !important;
+    border-radius: 6px;
+  }
+
+  .middle-month {
+    background: $color-light-gray-4 !important;
+  }
+  .button-list {
+    position: absolute;
+    bottom: 10px;
+    right: 30px;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    button {
+      border: none;
+      background: transparent;
+      padding: 4px 10px;
+      &.active {
+        background: $color-primary-dark !important;
+        color: $color-white;
+        border-radius: 6px;
+      }
+    }
+  }
+}

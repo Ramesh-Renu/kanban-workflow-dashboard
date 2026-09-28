@@ -1,0 +1,14 @@
+{
+  "name": "@orion/shared",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.js",
+  "dependencies": {
+    "@euroland/react": "^3.0.2",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^4.2.1",
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.10.6",
+    "react-dropdown-select": "^4.9.3"
+  }
+}

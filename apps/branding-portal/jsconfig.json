@@ -1,0 +1,6 @@
+﻿{
+  "compilerOptions": {
+    "baseUrl": "src"
+  },
+  "include": ["src", "../../packages/shared/src/utils/brandingGuidelinesConfig.js"]
+}

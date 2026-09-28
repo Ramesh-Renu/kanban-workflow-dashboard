@@ -1,0 +1,61 @@
+.attachment-container {
+  .attachmentHeading {
+    font-size: var(--font-size-sm);
+    font-weight: 400;
+    line-height: 100%;
+    letter-spacing: 0%;
+    vertical-align: middle;
+    text-transform: capitalize;
+    margin: 25px 0 4px;
+    padding: 0;
+    color: $color-black;
+    &.size-s {
+      font-size: var(--font-size-sm);
+    }
+    &.size-m {
+      font-size: var(--font-size-sm);
+    }
+    &.size-l {
+      font-weight: 500;
+      font-size: var(--font-size-sm);
+    }
+    &.size-xl {
+      font-weight: 600;
+      font-size: var(--font-size-sm);
+    }
+  }
+  .uploadHereHeading {
+    font-weight: 400;
+    font-size: var(--font-size-sm);
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-align: center;
+    vertical-align: middle;
+    color: $color-light-black-2 !important;
+  }
+  .addedAttachmentName {
+    cursor: pointer;
+    font-weight: 400;
+    font-size: var(--font-size-sm);
+    line-height: 100%;
+    letter-spacing: 0%;
+    vertical-align: middle;
+    color: $color-black;
+  }
+  [class^="icon-"] {
+    font-size: var(--font-size-3xl);
+  }
+  .removeAttachment {
+    padding: 0;
+    margin: 0;
+    .trashFull-icon {
+      width: 22px;
+      height: 22px;
+    }
+  }
+  .upload-disbaled {
+    -webkit-user-select: none;
+    user-select: none;
+    pointer-events: none;
+  }
+}

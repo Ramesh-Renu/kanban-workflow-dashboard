@@ -1,0 +1,58 @@
+.notification-drawer-modal {
+  position: fixed;
+  top: 0;
+  margin: 0;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1055;
+  min-width: 500px;
+  /* above backdrop */
+  @media screen and (max-width: 600px) {
+    min-width: 340px;
+    max-width: 100%;
+  }
+  &.sideNavExpanded {
+    left: 278px;
+    @media screen and (max-width: 600px) {
+      left: 0px;
+    }
+  }
+
+  &.sideNavCollapsed {
+    left: 85px;
+    max-width: 550px !important;
+     @media screen and (max-width: 600px) {
+      left: 0px;
+    }
+  }
+
+  .modal-body {
+    @media screen and (max-width: 600px) {
+      height: 99vh;
+      overflow: hidden;
+    }
+  }
+}
+
+.notification-drawer-modal.show {
+  transform: translateX(0%);
+}
+
+/* Backdrop only on the body (not left side menu) */
+.custom-backdrop {
+  background-color: rgba(0, 0, 0, 0.3);
+  position: fixed;
+  top: 0;
+  width: calc(100% - 85px);
+  height: 100%;
+  z-index: 1050;
+  /* just below modal */
+
+  &.sideNavExpanded {
+    left: 278px;
+  }
+
+  &.sideNavCollapsed {
+    left: 85px;
+  }
+}

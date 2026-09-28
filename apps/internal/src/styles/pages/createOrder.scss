@@ -1,0 +1,461 @@
+.orderSection {
+  h5 {
+    font-size: var(--font-size-md);
+    color: $color-black;
+  }
+  .CustomText {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: $color-black;
+  }
+  .react-dropdown-select {
+    border-radius: 6px;
+    border: 1px solid $color-light-light-gray;
+    background: $color-light-ghost-white;
+    height: 42px;
+    margin: 0 0 0px 0;
+    padding: 13px 15px 13px 12px;
+    .react-dropdown-select-content {
+      color: var(--color-light-black-2);
+      font-size: var(--font-size-sm);
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      display: flex;
+      flex-direction: row;
+      overflow: hidden;
+      flex-wrap: nowrap;
+      text-overflow: ellipsis;
+      justify-content: flex-start;
+    }
+    .react-dropdown-select-dropdown-handle svg {
+      vertical-align: 0px;
+      width: 21px;
+      height: 21px;
+    }
+    .react-dropdown-select-option {
+      background: transparent;
+      color: $color-light-black-2;
+      font-size: var(--font-size-sm);
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      white-space: nowrap;
+      margin: 0;
+    }
+  }
+  .custom-dropdownRenderer {
+    .react-dropdown-select-option {
+      position: relative;
+      &::before {
+        position: absolute;
+        content: ",";
+        right: 0px;
+        bottom: 0;
+      }
+      &:nth-last-child(2)::before {
+        content: "";
+      }
+      .react-dropdown-select-option-remove {
+        display: none;
+      }
+    }
+    .react-dropdown-select-dropdown {
+      overflow: visible;
+      border-radius: 6px;
+      .dropdownList-main {
+        padding: 12px 12px;
+        .dropdownList-head {
+          font-size: var(--font-size-sm);
+          font-style: normal;
+          font-weight: 500;
+          line-height: normal;
+          color: $color-gray;
+          margin: 0 0 12px 0;
+          padding-bottom: 12px;
+          border-bottom: 1px solid $color-light-gray;
+        }
+        .dropdownLists {
+          overflow: auto;
+          max-height: 200px;
+          padding: 0;
+          position: relative;
+          &.single {
+            margin: 0;
+            padding: 0;
+          }
+          &::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+            background-color: $color-light-light-gray;
+            border-radius: 10px;
+          }
+          &::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px $color-light-light-gray;
+            border-radius: 10px;
+            background-color: $color-light-light-gray;
+          }
+          &::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            -webkit-box-shadow: inset 0 0 6px $color-oldSilver;
+            background-color: $color-oldSilver;
+          }
+          .error-show {
+            font-size: 13px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            margin: 0;
+            padding: 0;
+            color: $color-light-red;
+            text-align: center;
+          }
+          .dropdownList-subhead,
+          .dropdownLists-label {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            &:hover {
+              background-color: var(--color-bg-light-gray-1);
+            }
+
+            &.selected {
+              .custom-checkbox {
+                background-color: $color-primary-dark;
+                border-color: $color-primary-dark;
+
+                &::before {
+                  display: block;
+                }
+              }
+            }
+            &.disabled{
+              background-color: $color-light-light-gray-4;
+              cursor: default;
+              .custom-checkbox{
+                background-color: $color-light-light-gray-5;
+                cursor: default;
+              }
+            }
+          }
+          &:focus {
+            outline: 2px solid #4d90fe; // or your primary color
+            background-color: #f1faff; // optional subtle background
+          }
+        }
+      }
+    }
+
+    &.member-list {
+      .dropdownList-main {
+        padding: 10px 10px 10px 10px;
+        .dropdownLists-label {
+          /*display: inline-block !important;*/
+          &.disabled,
+          &:disabled {
+            pointer-events: none;
+            cursor: not-allowed;
+            opacity: 0.5;
+          }
+          .lable-field {
+            margin: 0 0 0 8px !important;
+          }
+        }
+      }
+    }
+  }
+
+  .primaryMarket-dropdownRenderer {
+    .dropdwonList-main {
+      padding: 5px;
+      .dropdwonList-head {
+        font-size: var(--font-size-sm);
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        color: $color-gray;
+        margin: 0 0 12px 0;
+        padding-bottom: 12px;
+        border-bottom: 1px solid $color-light-gray;
+      }
+      .dropdwonLists {
+        overflow: auto;
+        max-height: 200px;
+        padding: 0;
+        position: relative;
+        &.single {
+          margin: 0;
+          padding: 0;
+        }
+        &::-webkit-scrollbar {
+          width: 4px;
+          height: 4px;
+          background-color: $color-light-light-gray;
+          border-radius: 10px;
+        }
+        &::-webkit-scrollbar-track {
+          -webkit-box-shadow: inset 0 0 6px $color-light-light-gray;
+          border-radius: 10px;
+          background-color: $color-light-light-gray;
+        }
+        &::-webkit-scrollbar-thumb {
+          border-radius: 10px;
+          -webkit-box-shadow: inset 0 0 6px $color-oldSilver;
+          background-color: $color-oldSilver;
+        }
+        .error-show {
+          font-size: 13px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+          margin: 0;
+          padding: 0;
+          color: $color-light-red;
+          text-align: center;
+        }
+        .dropdownList-subhead,
+        .dropdwonLists-label {
+          position: relative;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          cursor: pointer;
+          padding: 8px;
+          border-radius: 4px;
+          transition: background-color 0.2s;
+          margin: auto;
+          label {
+            font-size: var(--font-size-sm);
+            color: $color-black;
+          }
+          &:hover {
+            background-color: var(--color-bg-light-gray-1);
+          }
+
+          &.selected {
+            .custom-checkbox {
+              background-color: $color-primary-dark;
+              border-color: $color-primary-dark;
+
+              &::before {
+                display: block;
+              }
+            }
+          }
+        }
+        &:focus {
+          outline: 2px solid #4d90fe; // or your primary color
+          background-color: #f1faff; // optional subtle background
+        }
+      }
+    }
+  }
+  .cursor-pointer {
+    cursor: pointer;
+  }
+  .check_ipo-text {
+    color: $color-oldSilver;
+  }
+  .category_col {
+    .option-name {
+      font-size: var(--font-size-sm);
+      color: $color-black;
+      font-weight: 400;
+      cursor: pointer;
+    }
+  }
+
+  // This is the common SCSS  for the Create Order component file .
+
+  input.custom-checkbox {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid $color-light-gray-7;
+    border-radius: 3px;
+    position: relative;
+    cursor: pointer;
+    background-color: white;
+    display: inline-block;
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0px;
+      left: 4px;
+      width: 7px;
+      height: 12px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+      display: none;
+    }
+    &:checked {
+      background-color: $color-primary; // your brand blue
+      border-color: $color-primary;
+      &::before {
+        display: block;
+      }
+    }
+  }
+  .selected-option-name {
+    color: $color-primary;
+  }
+  .option-name {
+    color: $color-black;
+  }
+  .input-type {
+    font-size: var(--font-size-sm);
+    padding: 9px 59px 9px 15px;
+    border-radius: 6px;
+    border: 1px solid $color-light-light-gray;
+    background: var(--color-light-ghost-white);
+    color: $color-oldSilver;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    position: relative;
+    &::placeholder {
+      color: $color-oldSilver;
+      font-size: 11px;
+    }
+  }
+  .search-icon {
+    position: absolute;
+    right: 12px;
+    top: 13px;
+  }
+  .close_icon {
+    position: absolute;
+    right: 40px;
+    top: 13px;
+    font-size: 13px;
+    // color: $color-light-black;
+  }
+  .suggestion-container {
+    padding: 5px;
+    margin: 0;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-light-light-gray);
+    margin-top: 5px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    .suggestion-list {
+      list-style: none;
+      border-radius: 4px;
+      font-size: var(--font-size-sm);
+      font-style: normal;
+      font-weight: 400;
+      color: var(--color-oldSilver);
+      max-height: 200px;
+      overflow: auto;
+      overflow-x: hidden;
+      margin: auto;
+      &::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+        background-color: $color-light-light-gray;
+        border-radius: 10px;
+      }
+      &::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px $color-light-light-gray;
+        border-radius: 10px;
+        background-color: $color-light-light-gray;
+      }
+      &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px $color-oldSilver;
+        background-color: $color-oldSilver;
+      }
+      .create_company_container {
+        button {
+          color: $color-primary;
+          font-size: var(--font-size-md);
+          span {
+            font-size: var(--font-size-xl);
+          }
+        }
+      }
+
+      // .company-not-found {
+      //   display: flex;
+      //   flex-direction: row;
+      //   align-items: ;
+      // }
+    }
+
+    .suggestion-list li {
+      padding: 8px;
+      cursor: pointer;
+      color: $color-black;
+      font-size: var(--font-size-sm);
+    }
+    .suggestion-list li:hover {
+      background-color: var(--color-bg-light-gray-1);
+    }
+  }
+
+  .search-loading {
+    position: absolute;
+    right: 12px;
+    top: 24px;
+    border-radius: 100%;
+    width: 0px;
+    height: 0px;
+    margin-top: -2px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-left-color: var(--color-gray);
+    border-top-color: var(--color-gray);
+    animation: spin 0.6s infinite linear, grow 0.3s forwards ease-out;
+  }
+  .plg_category_text {
+    font-size: var(--font-size-xs);
+    font-weight: 400;
+    color: $color-light-black-2;
+  }
+  .category_text {
+    font-size: var(--font-size-xs);
+    font-weight: 400;
+    color: $color-light-black-2;
+  }
+  .activeButton {
+    padding: 10px 16px;
+    border: 1px solid $color-primary;
+    background-color: $color-primary !important;
+    color: $color-white !important;
+    &:hover {
+      background-color: $color-blue-7-light !important;
+      color: $color-primary !important;
+    }
+  }
+  .inActiveButton {
+    background-color: $color-light-light-gray;
+    color: $color-black;
+  }
+  .plg_order_tool_list {
+    background-color: $color-light-light-gray;
+    label {
+      font-size: var(--font-size-sm);
+      color: $color-light-black-2;
+      font-weight: 400;
+    }
+  }
+}
+
+.orderSection .react-dropdown-select.order-creation {
+  .react-dropdown-select-content {
+    .react-dropdown-select-option {
+      color: $color-light-black-2;
+    }
+  }
+}

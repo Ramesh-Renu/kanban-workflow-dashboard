@@ -1,0 +1,27 @@
+.showMoreLess-content {
+  margin: 0;
+  padding: 0;
+}
+
+.showMoreButton {
+  display: block;
+  width: 90px;
+  background: none;
+  border: none;
+  font-size: var(--font-size-sm);
+  font-weight: 400;
+  line-height: 16.8px;
+  color: $color-primary;
+  margin: 10px 0 0;
+  &.left {
+    margin-right: auto;
+  }
+  &.right {
+    margin-left: auto;
+  }
+  &.center {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

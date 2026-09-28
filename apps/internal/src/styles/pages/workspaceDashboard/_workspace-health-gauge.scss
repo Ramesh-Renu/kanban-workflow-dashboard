@@ -1,0 +1,285 @@
+/* Workspace health speedometer — thin rim + hub pointer */
+
+.workspace-health-gauge {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  padding: 16px 16px 14px;
+  box-sizing: border-box;
+
+  &__head {
+    flex-shrink: 0;
+    margin-bottom: 10px;
+  }
+
+  &__title {
+    color: var(--color-black);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    line-height: 30px;
+    margin: 0;
+    width: auto;
+  }
+
+  &__sub-title {
+    margin: 5px 0 0;
+    font-size: var(--font-size-xs);
+    line-height: 18px;
+    font-weight: 500;
+    color: var(--color-light-black-2);
+  }
+
+  &__skeleton,
+  &__empty {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+  }
+
+  &__body {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 16px;
+    min-height: 0;
+  }
+
+  &__meter {
+    position: relative;
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    container-type: inline-size;
+    container-name: health-meter;
+  }
+
+  &__canvas {
+    position: relative;
+    width: 100%;
+    max-width: 280px;
+    overflow: hidden;
+    /* aspect-ratio set inline from SVG_WIDTH / SVG_HEIGHT */
+  }
+
+  &__svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  &__needle {
+    pointer-events: none;
+  }
+
+  &__color-shadow {
+    pointer-events: none;
+  }
+
+  &__chart {
+    width: 100%;
+  }
+
+  &__value-content {
+    position: absolute;
+    /* left/top/width/height set inline from hub (CX, CY, HUB_R) */
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.1;
+    gap: clamp(1px, 1.2cqw, 4px);
+    pointer-events: none;
+    z-index: 1;
+    padding: clamp(2px, 2cqw, 8px);
+    overflow: hidden;
+  }
+
+  &__trend {
+    width: clamp(10px, 5cqw, 14px);
+    height: auto;
+    aspect-ratio: 14 / 9;
+    flex-shrink: 0;
+  }
+
+  &__value {
+    font-size: clamp(16px, 11.5cqw, 32px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #0f172a;
+    line-height: 1;
+    margin: 0;
+  }
+
+  &__status {
+    font-size: clamp(9px, 5cqw, 14px);
+    font-weight: 600;
+    line-height: 1.15;
+    margin: 0;
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__average {
+    margin-top: 2px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(0, 173, 240, 0.12);
+    color: #0f172a;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  &__legend {
+    list-style: none;
+    margin: 0;
+    padding: 8px 0 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px;
+    min-width: 132px;
+    flex: 0 0 auto;
+  }
+
+  &__legend-item {
+    display: grid;
+    grid-template-columns: 12px minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 10px;
+  }
+
+  &__legend-swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+  }
+
+  &__legend-label {
+    font-size: 13px;
+    font-weight: 400;
+    color: #475569;
+    white-space: nowrap;
+  }
+
+  &__legend-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f172a;
+    text-align: right;
+    min-width: 36px;
+  }
+
+  @media (max-width: 640px) {
+    &__body {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    &__meter {
+      max-width: 100%;
+    }
+
+    &__legend {
+      width: 100%;
+      min-width: 0;
+    }
+  }
+}
+
+.dashboard-page__content-left-donut-chart {
+  .workspace-health-gauge {
+    flex: 1;
+    min-height: 280px;
+
+    &__body {
+      gap: 8px 10px;
+    }
+
+    &__legend {
+      min-width: 118px;
+      gap: 12px;
+      padding-top: 4px;
+    }
+
+    &__legend-label,
+    &__legend-value {
+      font-size: 12px;
+    }
+  }
+}
+
+/* Compact meter: keep % + status centered inside the hub */
+@container health-meter (max-width: 200px) {
+  .workspace-health-gauge__value-content {
+    gap: 1px;
+    padding: 2px 4px;
+  }
+
+  .workspace-health-gauge__value {
+    font-size: clamp(15px, 14cqw, 22px);
+  }
+
+  .workspace-health-gauge__status {
+    font-size: clamp(8px, 6.5cqw, 11px);
+  }
+
+  .workspace-health-gauge__trend {
+    width: 10px;
+  }
+}
+
+/* Layered gauge (react-gauge-component wrapper) */
+.orion-gauge-chart {
+  position: relative;
+  width: 100%;
+
+  svg {
+    overflow: visible;
+  }
+
+  &--shadow {
+    .orion-gauge-chart__shadow {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.55;
+      filter: blur(10px);
+      transform: scale(0.98);
+      transform-origin: center bottom;
+
+      path {
+        opacity: 0.85;
+      }
+    }
+
+    .orion-gauge-chart__rim {
+      position: relative;
+      z-index: 1;
+    }
+  }
+
+  &__rim {
+    .pointer,
+    .arrow {
+      filter: drop-shadow(0 1px 1px rgba(15, 23, 42, 0.25));
+    }
+  }
+}

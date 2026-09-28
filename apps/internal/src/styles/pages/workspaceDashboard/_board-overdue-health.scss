@@ -1,0 +1,596 @@
+/* Board overdue health chart */
+.board-overdue-health-chart {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding: 16px 16px 14px;
+  background: var(--color-white);
+  border: 1px solid var(--color-chips-gray);
+  box-shadow: 0px 0px 34px -9px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  position: relative;
+  z-index: 1;
+  height: auto;
+
+  .task-dashboard-flow-chart &,
+  .dashboard-health-overview & {
+    height: 100%;
+  }
+  &--loading {
+    .loading-skeleton {
+      -webkit-animation: loading 2s ease-in-out infinite;
+      animation: loading 2s ease-in-out infinite;
+      background: linear-gradient(
+        90deg,
+        var(--color-light-light-gray) 25%,
+        var(--color-light-light-gray-1) 50%,
+        var(--color-light-light-gray-4) 75%
+      );
+      background-size: 200% 100%;
+      border-radius: 8px;
+      height: 100px;
+      min-height: 100px;
+      width: 100%;
+    }
+  }
+  .loading-skeleton {
+    -webkit-animation: loading 2s ease-in-out infinite;
+    animation: loading 2s ease-in-out infinite;
+    background: linear-gradient(
+      90deg,
+      var(--color-light-light-gray) 25%,
+      var(--color-light-light-gray-1) 50%,
+      var(--color-light-light-gray-4) 75%
+    );
+    background-size: 200% 100%;
+    border-radius: 8px;
+    height: 100px;
+    min-height: 100px;
+    width: 100%;
+  }
+
+  &--empty {
+    display: flex;
+    flex-direction: column;
+    min-height: 280px;
+  }
+
+  &__empty {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+  }
+
+  &__chart-wrap {
+    min-width: 0;
+    // overflow: hidden;
+
+    .recharts-responsive-container {
+      transition: opacity 160ms ease;
+    }
+
+    .recharts-wrapper,
+    .recharts-surface {
+      overflow: hidden;
+      outline: none;
+    }
+
+    .recharts-wrapper:focus,
+    .recharts-wrapper:focus-visible,
+    .recharts-surface:focus,
+    .recharts-surface:focus-visible,
+    .recharts-surface *:focus,
+    .recharts-surface *:focus-visible {
+      outline: none;
+    }
+
+    .recharts-line-curve,
+    .recharts-area-curve {
+      shape-rendering: geometricPrecision;
+    }
+
+    &--settling {
+      .recharts-responsive-container {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+  }
+
+  &__scroll-body {
+    min-width: 0;
+
+    &--expanded {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-right: 4px;
+      margin-right: -4px;
+    }
+  }
+
+  &__expanded-shell {
+    position: fixed;
+    top: 54%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1201;
+    width: min(100vw - 24px, 1650px);
+    max-height: min(92vh, 960px);
+    overflow: visible;
+
+    &--outside-click-pulse {
+      animation: board-overdue-health-chart-outside-click-pulse 220ms ease-out;
+    }
+  }
+
+  &--expanded {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 0;
+    max-height: min(92vh, 960px);
+    overflow: hidden;
+    margin: 0;
+    padding: 32px 28px 24px;
+
+    > .board-overdue-health-chart__head,
+    > .board-overdue-health-chart__count-cards {
+      flex-shrink: 0;
+    }
+
+    .board-overdue-health-chart__chart-wrap {
+      min-height: 460px;
+      margin: 20px 0 12px !important;
+      overflow: visible;
+
+      .recharts-wrapper,
+      .recharts-surface {
+        overflow: visible;
+      }
+    }
+
+    .board-overdue-health-chart__legend {
+      flex-shrink: 0;
+      padding-bottom: 8px;
+    }
+  }
+
+  &__tooltip-float {
+    position: absolute;
+    pointer-events: none;
+    z-index: 12;
+  }
+  &__count-cards {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  &__count-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    justify-content: flex-start;
+    gap: 4px;
+    background: var(--color-white);
+    box-shadow: var(--dashboard-shadow);
+    border-radius: 10px;
+    padding: 15px 20px;
+    min-width: 155px;
+    .dashboard-count__dot.dashboard-count__dot--default {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      border-radius: 4px;
+      background: var(--color-light-gray-6);
+      z-index: 1;
+      padding: 4px;
+    }
+  }
+  &__count-card-value {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    line-height: 30px;
+    color: var(--color-black);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    justify-content: flex-start;
+    gap: 4px;
+    &-label {
+      font-size: var(--font-size-xs);
+      font-weight: 400;
+      line-height: 16px;
+      color: var(--color-light-black-2);
+      margin: 0;
+    }
+  }
+  &__count-card-sub-title {
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 14px;
+    color: var(--color-light-black-2);
+    margin: 0;
+  }
+
+  &__backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.48);
+    z-index: 1200;
+  }
+
+  &__close {
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 28px;
+    height: 28px;
+    padding: 0px 2px 4px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--color-white);
+    color: var(--color-black);
+    font-size: 20px;
+    line-height: 18px;
+    cursor: pointer;
+    z-index: 500;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.2);
+    .close-popup-modal__icon {
+      width: 15px;
+      height: 15px;
+      vertical-align: -3px;
+    }
+  }
+
+  &--loading {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 280px;
+    width: 100%;
+  }
+
+  &__head {
+    margin-bottom: 10px;
+  }
+
+  &__head-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: nowrap;
+    .board-overdue-health-chart__title-button {
+      background: var(--color-white);
+      border: 1px solid var(--color-light-light-gray-1);
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: var(--font-size-sm);
+      font-weight: 400;
+      cursor: pointer;
+    }
+    .board-overdue-health-chart__title-button.active {
+      background: var(--color-primary);
+      color: var(--color-white);
+      border: 1px solid var(--color-primary);
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: var(--font-size-sm);
+      font-weight: 400;
+    }
+  }
+
+  &__title {
+    color: var(--color-black);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    line-height: 30px;
+    margin: 0;
+    width: auto;
+  }
+
+  &__subtitle {
+    margin: 5px 0 0;
+    color: var(--color-light-black-2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    &--expanded {
+      margin: 0;
+      align-items: baseline;
+    }
+    &-text {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      font-size: var(--font-size-xs);
+      line-height: 18px;
+      font-weight: 500;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0;
+    }
+    &-expand {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      color: var(--color-primary-dark);
+      font-size: var(--font-size-xs);
+      line-height: 18px;
+      font-weight: 500;
+      cursor: pointer;
+      margin: 0;
+      border: none;
+      background: none;
+      padding: 0;
+      &:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+    }
+  }
+
+  &__subtitle-expand {
+    cursor: pointer;
+  }
+
+  &__trend-icon {
+    color: var(--color-light-red-3);
+    font-size: 0;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__subtitle-strong {
+    color: var(--color-black);
+    font-weight: 500;
+  }
+
+  &__legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 18px;
+    margin: 0 0 8px;
+    font-size: var(--font-size-xs);
+    line-height: 16px;
+    font-weight: 500;
+    color: var(--color-light-black-2);
+    justify-content: center;
+    &--top {
+      margin: 0 0;
+    }
+
+    &--bottom {
+      margin-top: 14px;
+      margin-bottom: 0;
+      justify-content: center;
+    }
+  }
+
+  &__legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    user-select: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    font-size: var(--font-size-xs);
+    line-height: 16px;
+    font-weight: 500;
+    color: var(--color-light-black-2);
+    transition: opacity 0.15s ease;
+
+    &.is-active {
+      opacity: 1;
+    }
+  }
+
+  &__legend-item--combo {
+    cursor: default;
+    gap: 4px;
+  }
+
+  &__legend-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: opacity 0.15s ease;
+
+    &.is-off {
+      opacity: 0.35;
+    }
+  }
+
+  &__legend-label {
+    margin-left: 2px;
+  }
+
+  &__legend-bar {
+    width: 14px;
+    height: 8px;
+    border-radius: 2px;
+    border: 1px solid;
+    flex-shrink: 0;
+    display: inline-block;
+
+    &--solid {
+      border: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+    }
+  }
+
+  &__legend-line {
+    flex-shrink: 0;
+    display: block;
+  }
+
+  &__legend-value {
+    font-weight: 600;
+    font-size: var(--font-size-xs);
+    color: var(--color-black);
+    margin-left: 2px;
+  }
+
+  &__legend-zones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      font-weight: 600;
+    }
+  }
+
+  &__zone-swatch {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  &__chart-wrap {
+    width: 100%;
+    margin: 8px 0 10px;
+  }
+
+  &__tooltip-anchor {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  &__tooltip {
+    position: relative;
+    overflow: visible;
+    padding: 12px 12px;
+    background: var(--color-white);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 6px;
+    box-shadow: 0 6px 17px -5px rgba(58, 77, 233, 0.15);
+    font-size: 12px;
+    min-width: 153px;
+
+    // &--arrow-left {
+    //   border: 1px solid rgba(15, 23, 42, 0.08);
+    //   border-bottom: none;
+    //   border-right: none;
+    //   min-height: 12px;
+    //   min-width: 12px;
+    //   padding: 4px;
+    //   position: absolute;
+    //   border-radius: 0;
+    //   top: 65%;
+    //   left: calc(50% - 85px);
+    //   transform: rotate(313deg);
+    //   background-color: var(--color-white);
+    //   box-shadow: -16px 2px 17px -5px rgba(58, 77, 233, 0.15);
+    // }
+
+    // &--arrow-right {
+    //   border: 1px solid rgba(15, 23, 42, 0.08);
+    //   border-bottom: none;
+    //   border-right: none;
+    //   min-height: 12px;
+    //   min-width: 12px;
+    //   position: absolute;
+    //   border-radius: 0;
+    //   padding: 4px;
+    //   top: 65%;
+    //   right: calc(50% - 87px);
+    //   transform: rotate(135deg);
+    //   background-color: var(--color-white);
+    //   box-shadow: 16px 2px 17px -5px rgba(58, 77, 233, 0.15);
+    // }
+  }
+
+  &__tooltip-title {
+    margin: 0 0 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-black);
+  }
+
+  &__tooltip-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 7px;
+    margin-top: 7px;
+  }
+
+  &__tooltip-swatch {
+    width: 8px;
+    height: 8px;
+    border-radius: 0px;
+    flex-shrink: 0;
+  }
+
+  &__tooltip-value {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 14px;
+    color: var(--color-light-black-2);
+    margin-right: auto;
+  }
+
+  &__tooltip-status {
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 14px;
+    color: var(--color-black);
+  }
+
+  &__tooltip-count {
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 14px;
+    color: var(--color-black);
+  }
+}
+
+@keyframes board-overdue-health-chart-outside-click-pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  45% {
+    transform: translate(-50%, -50%) scale(1.02);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}

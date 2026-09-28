@@ -1,0 +1,27 @@
+/*
+ * Workspace / Board / Task dashboard styles
+ * Split from a single ~8k-line file into focused partials under ./workspaceDashboard/
+ */
+
+@import "./workspaceDashboard/dashboard-page";
+@import "./workspaceDashboard/ai-dashboard-mode";
+@import "./workspaceDashboard/health-overview";
+@import "./workspaceDashboard/workspace-velocity-shared";
+@import "./workspaceDashboard/velocity-widget";
+@import "./workspaceDashboard/workspace-widget";
+@import "./workspaceDashboard/velocity-indicators";
+@import "./workspaceDashboard/dashboard-panels";
+@import "./workspaceDashboard/workload-by-assignee";
+@import "./workspaceDashboard/congestion-heatmap";
+@import "./workspaceDashboard/dashboard-kanban";
+@import "./workspaceDashboard/task-stage-distribution";
+@import "./workspaceDashboard/stage-aging-analysis";
+@import "./workspaceDashboard/board-overdue-health";
+@import "./workspaceDashboard/upcoming-deadlines";
+@import "./workspaceDashboard/order-tools-table";
+@import "./workspaceDashboard/board-charts";
+@import "./workspaceDashboard/workspace-health-gauge";
+@import "./workspaceDashboard/workspace-ai-insights";
+@import "./workspaceDashboard/task-dashboard-extras";
+@import "./workspaceDashboard/dashboard-skeletons";
+@import "./workspaceDashboard/subtask-progress";

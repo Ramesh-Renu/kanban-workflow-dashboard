@@ -1,0 +1,111 @@
+/* Task dashboard table & average time */
+.dashboard_table-task-dashboar {
+  .products__body-table {
+    thead {
+      border: none !important;
+      tr {
+        th {
+          &.stageOrder {
+            text-align: center;
+          }
+        }
+      }
+    }
+    tbody {
+      tr {
+        td {
+          span {
+            color: var(--color-red);
+          }
+        }
+      }
+    }
+  }
+}
+
+.average-time-per-stage {
+  .products__body-table {
+    background: var(--color-white);
+    .table-container {
+      border: 1px solid var(--color-light-light-gray-1);
+      border-radius: 8px;
+      min-height: 150px;
+      margin: 0 0 20px;
+      max-height: calc(100vh - 200px);
+    }
+    thead {
+      background: var(--color-light-gray-5a);
+      z-index: 1;
+      position: sticky;
+      top: 0;
+      overflow: hidden;
+      box-shadow: 0 2px 5px #d1d1d11a;
+      border-bottom: 0.5px solid var(--color-light-gray-13) !important;
+      th {
+       line-height: 22px;
+      }
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    tfoot {
+      .average-time-per-stage__footer-row {
+        background: var(--color-light-gray-5);
+      }
+
+      td {
+        padding: 14px 12px;
+        font-size: 12px;
+        line-height: 18px;
+        border-top: 1px solid var(--color-light-light-gray-1);
+        vertical-align: middle;
+        &.average-time-per-stage__footer-average {
+          text-align: left;
+          font-weight: 500;
+        }
+        &.average-time-per-stage__footer-label {
+          text-align: left;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+  .average-time-per-stage__footer-label-all-included-stages {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--color-light-black-2);
+  }
+  &__footer-label {
+    font-weight: 500;
+    color: var(--color-black);
+  }
+
+  &__footer-average {
+    font-weight: 600;
+    color: var(--color-primary);
+    text-align: left;
+  }
+
+  &__footer-empty {
+    background: var(--color-light-gray-5);
+  }
+
+  &__footer-total {
+    text-align: left;
+    white-space: nowrap;
+
+    &-label {
+      margin-right: 8px;
+      font-weight: 500;
+      color: var(--color-light-black-2);
+    }
+
+    strong {
+      font-weight: 700;
+      color: var(--color-black);
+    }
+  }
+}

@@ -1,0 +1,108 @@
+.custom-modal-width {
+  max-width: 1100px !important;
+  .modal-body {
+    background: $color-bg-light-gray;
+    border-radius: 12px;
+    padding: 12px;
+    .tabel-header {
+      font-weight: 500;
+      font-style: Medium;
+      font-size: var(--font-size-lg);
+      line-height: 100%;
+      vertical-align: middle;
+      color: $color-primary-dark-2;
+      margin: 5px 0 10px;
+    }
+    .table-responsive {
+      border-radius: 8px;
+      table {
+        border-collapse: collapse;
+        margin: 0;
+        padding: 0;
+        th {
+          font-weight: 400;
+          font-size: var(--font-size-sm);
+          line-height: 100%;
+          vertical-align: middle;
+          color: $color-black;
+          background: $color-light-gray-5;
+        }
+        tbody {
+          > tr:nth-of-type(odd) > * {
+            --bs-table-color-type: inherit;
+            --bs-table-bg-type: inherit;
+          }
+          tr td {
+            font-weight: 400;
+            font-size: var(--font-size-sm);
+            line-height: 100%;
+            vertical-align: middle;
+            color: $color-oldSilver;
+          }
+        }
+      }
+    }
+    .selectedInstrumentsDisplay {
+      background: $color-white;
+      padding: 4px 10px 8px;
+      border-radius: 4px;
+      .text-muted small {
+        font-weight: 400;
+        font-size: var(--font-size-sm);
+        line-height: 100%;
+        color: $color-darkLiver;
+      }
+      .selected-instruments-head {
+        font-weight: 500;
+        font-style: Medium;
+        font-size: var(--font-size-sm);
+        line-height: 100%;
+        vertical-align: middle;
+        color: $color-primary-dark-2;
+        margin: 5px 0 10px;
+      }
+      .dragged-content {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        .selected-instrument {
+          background-color: $color-bg-light-gray-1 !important;
+          padding: 5px 8px 5px 14px !important;
+          height: 27px;
+          color: $color-oldSilver;
+          font-weight: 400;
+          font-size: var(--font-size-sm);
+          line-height: 100%;
+          vertical-align: middle;
+          .onRemoveid {
+            color: $color-oldSilver;
+            text-decoration: none;
+            font-size: var(--font-size-sm);
+          }
+        }
+      }
+    }
+    .modalActions {
+      button {
+        width: 80px;
+        height: 45px;
+        border-radius: 8px;
+        font-weight: 400;
+        font-size: 13px;
+        line-height: 100%;
+        vertical-align: middle;
+      }
+      .modalCancel_btn {
+        background: $color-light-light-gray;
+        color: $color-light-black-2;
+      }
+      .modalSave_btn {
+        background: $color-blue-4;
+        color: $color-white;
+      }
+    }
+  }
+}
