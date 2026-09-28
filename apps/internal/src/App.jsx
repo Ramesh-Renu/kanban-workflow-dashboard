@@ -6,9 +6,8 @@ import "styles/vendor.scss";
 import "@orion/shared/src/styles/icons/style.scss";
 import "styles/index.scss";
 import AccessRequired from "./pages/Unauthorized/AccessRequired";
-import { useIsAuthenticated, useMsal } from "@azure/msal-react";
+import useAuthSession from "./hooks/useAuthSession";
 import { injectDependencies, useToast } from "@orion/shared";
-import { InteractionStatus } from "@azure/msal-browser";
 import {
   DashboardAccessGate,
   HomeRedirect,
@@ -53,15 +52,14 @@ const KnowledgeBaseIssue = lazy(() => import("pages/KnowledgeBase/issues/IssueDe
 
 const App = () => {
   const [{ data, loading }, { setAuth, logoutUser }] = useAuth();
-  const { instance, accounts, inProgress } = useMsal();
   const location = useLocation();
-  const isAuthenticated = useIsAuthenticated();
+  const { isAuthenticated } = useAuthSession();
   const navigate = useNavigate();
   const { showToast } = useToast();
 
   useEffect(() => {
-    injectDependencies({ instance, setAuth, showToast, logoutUser });
-  }, [instance, setAuth, showToast, logoutUser]);
+    injectDependencies({ setAuth, showToast, logoutUser });
+  }, [setAuth, showToast, logoutUser]);
 
   /** DISABLE/RESTRICT DEVELOPER OPTION - IF IT'S NOT 'DEV' ENVIRONMENT */
   useEffect(() => {
@@ -115,12 +113,10 @@ const App = () => {
 
   /** ----------------------- Redirect to Login if not authenticated ----------------------- */
   useEffect(() => {
-    if (inProgress !== InteractionStatus.None) return;
-
-    if ((!isAuthenticated || accounts?.length === 0) && location.pathname !== "/") {
+    if (!isAuthenticated && location.pathname !== "/") {
       navigate("/", { replace: true });
     }
-  }, [isAuthenticated, accounts, location.pathname, navigate]);
+  }, [isAuthenticated, location.pathname, navigate]);
 
   if (loading && !isAuthenticated) {
     return <Spinner />; // app-wide loading only before auth; keep deep links mounted while user details load
@@ -129,8 +125,8 @@ const App = () => {
   return (
     <Suspense fallback={<Spinner />}>
       <Routes>
-        {/* PUBLIC ROUTES — only when MSAL session is absent */}
-        {(!isAuthenticated || accounts?.length === 0) && (
+        {/* PUBLIC ROUTES — only when no signed-in session */}
+        {!isAuthenticated && (
           <>
             <Route path="/" element={<Login />} />
             <Route path="*" element={<Login />} />
@@ -138,9 +134,9 @@ const App = () => {
         )}
 
         {/* PROTECTED ROUTES */}
-        {/* Mount layout on MSAL auth only; user details load inside UserLayout.
+        {/* Mount layout on session only; user details load inside UserLayout.
             Requiring data?.details here breaks deep links (no route matches) until getUserInfo finishes. */}
-        {isAuthenticated && accounts?.length > 0 && (
+        {isAuthenticated && (
           <Route path="/" element={<UserLayout />}>
             <Route index element={<HomeRedirect />} />
           <Route path="home" element={<ApplicationHub />} />

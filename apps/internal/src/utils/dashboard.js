@@ -12,7 +12,6 @@ import AtRiskSVGImage from "./../pages/Dashboard/Widget/Icons/AtRiskSVGImage";
 import NeedsAttentionSVGImage from "./../pages/Dashboard/Widget/Icons/NeedsAttentionSVGImage";
 
 import dayjs from "dayjs";
-import { name } from "@azure/msal-browser/dist/packageMetadata";
 
 const formatDate = (date) => {
   const y = date?.getFullYear();

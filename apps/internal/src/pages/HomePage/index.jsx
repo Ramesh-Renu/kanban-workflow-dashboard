@@ -9,7 +9,6 @@ import useAuth from "../../hooks/useAuth";
 import NotFound from "../NotFound/NotFound";
 import Unauthorized from "../Unauthorized/Unauthorized";
 import { setExpiresOn, setActiveWorkSpace } from "@orion/shared";
-import { useMsal } from "@azure/msal-react";
 import {
   getKanbanBasePath,
   isKanbanPathname,
@@ -32,7 +31,6 @@ const HomePage = ({ hasUserData }) => {
   const [unauthorizedError, setUnauthorizedError] = useState(false);
   const [serverError, setServerError] = useState(false);
   const [errorInfo, setErrorInfo] = useState({});
-  const { instance } = useMsal();
   const { userRoleResponseDetail } = auth?.details || {};
   const rolesArray = Array.isArray(userRoleResponseDetail)
     ? userRoleResponseDetail.filter(Boolean) // remove null/undefined
@@ -69,9 +67,7 @@ const HomePage = ({ hasUserData }) => {
     setAuth("");
     setExpiresOn("");
     setActiveWorkSpace("");
-    instance.logoutPopup({
-      postLogoutRedirectUri: "/",
-    });
+    navigate("/", { replace: true });
   };
 
   const getBoardData = async (data, val, type) => {

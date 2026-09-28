@@ -1,16 +1,10 @@
 import { Outlet, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { Fragment, useState, useEffect, useRef } from "react";
 import SideNav from "./sidenav/sidenav.component";
-import { useIsAuthenticated, useMsal } from "@azure/msal-react";
-import { getAuthType, setDeepLinkURL, setExpiresOn } from "@orion/shared";
+import { ensureAccessToken, setDeepLinkURL } from "@orion/shared";
 import useAuth from "../../hooks/useAuth";
+import useAuthSession from "../../hooks/useAuthSession";
 import serverErrorIcon from "../../assets/images/icons8-server-error-66.png";
-import {
-  loginRequestB2C,
-  loginRequestORG,
-  msalInstanceB2C,
-  msalInstanceORG,
-} from "authConfig";
 import { useSocket } from "store/context/SocketProvider";
 import NotificationsRealTime from "pages/Notification/NotificationRealTime";
 import ConnectionError from "pages/Unauthorized/ConnectionError";
@@ -23,8 +17,7 @@ const UserLayout = () => {
   const [liveNotifications, setLiveNotifications] = useState([]);
   const [notificationId, setNotificationId] = useState(null);
 
-  const { instance, accounts } = useMsal();
-  const isAuthenticated = useIsAuthenticated();
+  const { isAuthenticated } = useAuthSession();
   const location = useLocation();
   const navigate = useNavigate();
   const { socket, lastMessage } = useSocket();
@@ -45,22 +38,12 @@ const UserLayout = () => {
 
   useEffect(() => {
     const initAuth = async () => {
-      if (isAuthenticated && accounts.length > 0) {
+      if (isAuthenticated) {
         try {
-          const activeInstance =
-            getAuthType() === "B2C" ? msalInstanceB2C : msalInstanceORG;
-          const activeLoginRequest =
-            getAuthType() === "B2C" ? loginRequestB2C : loginRequestORG;
-
-          const response = await activeInstance.acquireTokenSilent({
-            ...activeLoginRequest,
-            account: accounts[0],
-          });
-
-          setAuth(response.accessToken);
-          setExpiresOn(response.idTokenClaims.exp);
+          const { accessToken } = await ensureAccessToken();
+          setAuth(accessToken);
         } catch (error) {
-          console.error("Silent token acquisition failed", error);
+          console.error("Session token refresh failed", error);
         } finally {
           setTokenReady(true);
         }
@@ -70,7 +53,7 @@ const UserLayout = () => {
     };
 
     initAuth();
-  }, [isAuthenticated, accounts, setAuth]);
+  }, [isAuthenticated, setAuth]);
 
   useEffect(() => {
     if (!tokenReady || data?.loading || data?.details || userDetailsError) return;

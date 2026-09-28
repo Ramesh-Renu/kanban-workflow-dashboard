@@ -11,13 +11,6 @@ import {
 import { createPortal } from "react-dom";
 import packageJson from "./../../../../package.json";
 import { orionLogo, appLogo } from "../../../assets/images";
-import {
-  loginRequestB2C,
-  loginRequestORG,
-  msalInstanceB2C,
-  msalInstanceORG,
-} from "authConfig";
-import { acquireTokenWithFallback } from "../../../utils/common";
 import { performAppLogout } from "../../../utils/authLogout";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import * as menu from "../../../assets/images";
@@ -27,14 +20,11 @@ import { useGlobalMaster } from "@orion/shared";
 import LogoAvatarShowLetter from "../../../components/common/LogoAvatarShowLetter";
 import usePhotoSync from "../../../hooks/usePhotoSync";
 import {
-  setExpiresOn,
   getExpiresOn,
-  getAuthType,
-  setAuthType,
   setDeepLinkURL,
   getDeepLinkURL,
+  refreshSession,
 } from "@orion/shared";
-import { useMsal } from "@azure/msal-react";
 import { useTranslation } from "react-i18next";
 import { useNotification } from "../../../hooks/useNotification";
 import { Badge, Button, Card, ListGroup, Dropdown } from "react-bootstrap";
@@ -87,7 +77,6 @@ const SideNav = ({ onChange }) => {
   const [collaps, setCollaps] = useState(false);
   const { roleList, getRoleList } = useGlobalMaster();
   const [{ data: auth }, { setAuth, logoutUser }] = useAuth();
-  const { accounts } = useMsal();
   const popupRef = useRef(null);
   const [showInfo, setShowInfo] = useState(false);
   const [showCollapsInfo, setCollapsShowInfo] = useState(false);
@@ -281,14 +270,9 @@ const SideNav = ({ onChange }) => {
 
   /** REFRESH TOKEN LOGIC */
   const refreshToken = () => {
-    const isB2C = getAuthType() === "B2C";
-    const activeInstance = isB2C ? msalInstanceB2C : msalInstanceORG;
-    const activeLoginRequest = isB2C ? loginRequestB2C : loginRequestORG;
-
-    acquireTokenWithFallback(activeInstance, accounts[0], activeLoginRequest, true)
-      .then(({ accessToken, idTokenClaims }) => {
+    refreshSession()
+      .then(({ accessToken }) => {
         setAuth(accessToken);
-        setExpiresOn(idTokenClaims.exp);
         clearTimeout(logoutTimerRef.current);
         setShowSessionModal(false);
       })

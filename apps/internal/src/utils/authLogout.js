@@ -1,13 +1,4 @@
-import {
-  getAuthType,
-  setAuthType,
-  setDeepLinkURL,
-  setExpiresOn,
-} from "@orion/shared";
-import {
-  msalInstanceB2C,
-  msalInstanceORG,
-} from "authConfig";
+import { setAuthType, setDeepLinkURL, logoutSession } from "@orion/shared";
 
 const WORKSPACE_STORAGE_KEYS = [
   "workspaceState",
@@ -20,7 +11,7 @@ const WORKSPACE_STORAGE_KEYS = [
   "filterCount",
 ];
 
-/** Full sign-out: API logout, MSAL popup, auth storage, workspace filters, redirect home. */
+/** Full sign-out: revoke session on the API, clear auth storage + workspace filters, redirect home. */
 export const performAppLogout = async ({
   logoutUser,
   setAuth,
@@ -32,18 +23,13 @@ export const performAppLogout = async ({
   } catch (err) {
     console.error("Background logout failed:", err);
   }
+  // Covers callers that don't pass logoutUser; a no-op once the session is gone.
+  await logoutSession();
 
   onBeforeLogout?.();
 
   setAuth?.("");
-  setExpiresOn("");
   setDeepLinkURL();
-
-  const activeInstance = getAuthType() === "B2C" ? msalInstanceB2C : msalInstanceORG;
-  activeInstance.logoutPopup({
-    postLogoutRedirectUri: "/",
-  });
-
   setAuthType("");
   WORKSPACE_STORAGE_KEYS.forEach((key) => localStorage.removeItem(key));
 

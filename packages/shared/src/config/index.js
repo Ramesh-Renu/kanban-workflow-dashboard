@@ -6,10 +6,6 @@ const trimUrl = (value) => {
 
 const PROCESS_ENV_BY_KEY = {
   REACT_APP_PLG_API_BASE_URL: process.env.REACT_APP_PLG_API_BASE_URL,
-  REACT_APP_PLG_B2B_CLIENT_ID: process.env.REACT_APP_PLG_B2B_CLIENT_ID,
-  REACT_APP_MSAL_AUTHORITY_URL: process.env.REACT_APP_MSAL_AUTHORITY_URL,
-  REACT_APP_PLG_B2C_CLIENT_ID: process.env.REACT_APP_PLG_B2C_CLIENT_ID,
-  REACT_APP_MSAL_B2C_AUTHORITY_URL: process.env.REACT_APP_MSAL_B2C_AUTHORITY_URL,
 };
 
 export const getRuntimeEnv = (key, fallback = "") => {
@@ -21,19 +17,9 @@ export const getRuntimeEnv = (key, fallback = "") => {
 export const didRuntimeEnvConfigFail = () =>
   Boolean(typeof window !== "undefined" && window._env_load_error);
 
-/** MSAL + API URLs required before sign-in. Empty after env-config.js timeout. */
-export const isRuntimeAuthConfigReady = () => {
-  const apiReady = Boolean(getRuntimeEnv("REACT_APP_PLG_API_BASE_URL"));
-  const orgReady = Boolean(
-    getRuntimeEnv("REACT_APP_PLG_B2B_CLIENT_ID") &&
-      getRuntimeEnv("REACT_APP_MSAL_AUTHORITY_URL"),
-  );
-  const b2cReady = Boolean(
-    getRuntimeEnv("REACT_APP_PLG_B2C_CLIENT_ID") &&
-      getRuntimeEnv("REACT_APP_MSAL_B2C_AUTHORITY_URL"),
-  );
-  return apiReady && (orgReady || b2cReady);
-};
+/** API URL required before sign-in (login is served by the API). Empty after env-config.js timeout. */
+export const isRuntimeAuthConfigReady = () =>
+  Boolean(getRuntimeEnv("REACT_APP_PLG_API_BASE_URL"));
 
 /**
  * Resolve Orion AI Insights base URL at call time (reads runtime env-config.js).

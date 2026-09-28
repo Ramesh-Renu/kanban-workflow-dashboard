@@ -50,7 +50,7 @@ A robust React-based platform designed to manage and optimize order processing, 
 ## 🛠️ Built With
 
 - **ReactJS** — Frontend Framework  
-- **Azure MSAL** — Authentication & SSO via Microsoft Identity Platform 
+- **Python (FastAPI) + PostgreSQL** — API and username/password JWT authentication (see `backend/README.md`)
 
 ---
 
@@ -65,15 +65,14 @@ cd orion-plg
 ```bash
 npm install
 ```
-3. Set up environment variables
-  
-  Create a .env file and add your Azure AD configuration:
+3. Start the Python API and database (see `backend/README.md`)
 ```bash
-REACT_APP_CLIENT_ID=your-azure-client-id
-REACT_APP_TENANT_ID=your-azure-tenant-id
-REACT_APP_AUTHORITY=https://login.microsoftonline.com/your-tenant-id
+cd backend
+cp .env.example .env   # set JWT_SECRET and ADMIN_PASSWORD
+docker compose -p orion-plg up -d --build
 ```
-4. Start the app
+4. Start the app against the local API
 ```bash
-npm start
+npm run start:internal:local
 ```
+Sign in with the admin username/password from `backend/.env`.

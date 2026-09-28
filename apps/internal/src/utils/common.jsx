@@ -1,8 +1,6 @@
-import { InteractionRequiredAuthError } from "@azure/msal-browser";
 import { secureEncrypt } from "./encrypt";
 import dayjs from "dayjs";
 // import * as XLSX from "xlsx";
-import { setActiveWorkSpace, setAuthType, setExpiresOn } from "@orion/shared";
 
 export const compareObject = (a = {}, b = {}) => {
   if (a === b) return true;
@@ -378,42 +376,6 @@ export const getFinancialYearsFromStart = (startYear) => {
   });
 
   return result;
-};
-
-/** MSAL - TOKEN FALLBACK STATE CHECK */
-export const acquireTokenWithFallback = async (
-  instance,
-  account,
-  tokenRequest,
-  forceRefresh = false,
-) => {
-  try {
-    // Attempt silent token acquisition
-    const response = await instance.acquireTokenSilent({
-      ...tokenRequest,
-      account: account,
-      forceRefresh: forceRefresh,
-    });
-    return response;
-  } catch (error) {
-    if (error instanceof InteractionRequiredAuthError) {
-      // If silent acquisition fails, fallback to interactive login
-      try {
-        const interactiveResponse = await instance.acquireTokenPopup(tokenRequest);
-        return interactiveResponse;
-      } catch (interactiveError) {
-        console.error("Interactive login failed:", interactiveError);
-        setExpiresOn("");
-        setAuthType("");
-        setActiveWorkSpace("");
-        window.location.href = "/";
-        throw interactiveError;
-      }
-    } else {
-      console.error("Token acquisition error:", error);
-      throw error;
-    }
-  }
 };
 
 export const isOnlyWhitespaceHtml = (input) => {

@@ -120,7 +120,6 @@ export default defineConfig(() => {
         assets: path.resolve(__dirname, "src/assets"),
         constant: path.resolve(__dirname, "src/constant"),
         constants: path.resolve(__dirname, "src/constants"),
-        authConfig: path.resolve(__dirname, "src/authConfig.js"),
         events: path.resolve(__dirname, "../../node_modules/events/events.js"),
         "~bootstrap": path.resolve(__dirname, "../../node_modules/bootstrap"),
       },
@@ -161,9 +160,6 @@ export default defineConfig(() => {
               id.includes("node_modules/react-router-dom")
             ) {
               return "vendor-react";
-            }
-            if (id.includes("node_modules/@azure")) {
-              return "vendor-msal";
             }
             if (
               id.includes("node_modules/react-bootstrap") ||

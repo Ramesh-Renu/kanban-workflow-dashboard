@@ -31,7 +31,7 @@ export const getApiErrorMeta = (error) => {
     return {
       type: API_ERROR_TYPES.CORS,
       title: "Cannot reach the application server",
-      message: `Your sign-in succeeded, but the browser could not load data from ${apiBase}. This is usually a CORS or network configuration issue (API not running, wrong API URL in .env, or missing CORS headers on the server).`,
+      message: `The browser could not reach ${apiBase}. This is usually a CORS or network configuration issue (API not running, wrong API URL in .env, or missing CORS headers on the server).`,
     };
   }
 
@@ -82,23 +82,14 @@ export const getRuntimeConfigErrorMeta = () => ({
     "The server is not responding, so sign-in configuration could not be loaded. Please try again when the server is available.",
 });
 
-export const isMsalConfigOrNetworkError = (error) => {
-  const code = String(error?.errorCode || error?.code || "");
-  const message = String(error?.message || error || "");
-  return (
-    didRuntimeEnvConfigFail() ||
-    !isRuntimeAuthConfigReady() ||
-    code === "empty_url_error" ||
-    code === "empty_input_error" ||
-    code === "endpoints_resolution_error" ||
-    message.includes("empty_url") ||
-    message.includes("URL was empty") ||
-    message.includes("endpoints_resolution")
-  );
-};
+/** Sign-in cannot proceed: runtime config missing, or the login API is unreachable. */
+export const isAuthConfigOrNetworkError = (error) =>
+  didRuntimeEnvConfigFail() ||
+  !isRuntimeAuthConfigReady() ||
+  Boolean(error && isConnectionBlockedError(error));
 
 export const getLoginConnectionErrorMeta = (error) => {
-  if (didRuntimeEnvConfigFail() || !isRuntimeAuthConfigReady() || isMsalConfigOrNetworkError(error)) {
+  if (isAuthConfigOrNetworkError(error)) {
     return getRuntimeConfigErrorMeta();
   }
   return null;

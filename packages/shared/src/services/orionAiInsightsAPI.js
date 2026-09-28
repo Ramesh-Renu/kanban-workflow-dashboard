@@ -7,6 +7,7 @@ import {
   setActiveWorkSpace,
   setDeepLinkURL,
 } from "../utils/storage";
+import { clearSession } from "./authSession";
 
 // Request methods
 const GET = "GET";
@@ -14,18 +15,15 @@ const POST = "POST";
 const PUT = "PUT";
 const DELETE = "DELETE";
 
-let msalInstance;
 let setAuthFn;
 let toastFn;
 let logoutUserFn;
 
 export const injectDependencies = ({
-  instance,
   setAuth,
   showToast,
   logoutUser,
 }) => {
-  msalInstance = instance;
   setAuthFn = setAuth;
   toastFn = showToast;
   logoutUserFn = logoutUser;
@@ -220,13 +218,8 @@ axiosBase.interceptors.response.use(
         setExpiresOn("");
         setActiveWorkSpace("");
 
-        if (msalInstance) {
-          await msalInstance.logoutPopup({
-            postLogoutRedirectUri: "/",
-          });
-        } else {
-          window.location.href = "/";
-        }
+        clearSession();
+        window.location.href = "/";
       } catch (logoutError) {
         console.error("Error handling 401 logout:", logoutError);
       }

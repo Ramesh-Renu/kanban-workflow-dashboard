@@ -45,7 +45,7 @@ export {
   getApiErrorMessage,
   isConnectionBlockedError,
   getRuntimeConfigErrorMeta,
-  isMsalConfigOrNetworkError,
+  isAuthConfigOrNetworkError,
   getLoginConnectionErrorMeta,
 } from './utils/apiError';
 
@@ -57,3 +57,6 @@ export { GATEWAY as GATEWAY_PATHS } from './constant/plg-gateWayService';
 
 
 
+
+// Auth (username/password JWT session)
+export * from './services/authSession';

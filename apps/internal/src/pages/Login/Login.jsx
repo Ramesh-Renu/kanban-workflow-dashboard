@@ -1,26 +1,15 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import {
-  AuthenticatedTemplate,
-  UnauthenticatedTemplate,
-  useMsal,
-  useIsAuthenticated,
-} from "@azure/msal-react";
-import { InteractionRequiredAuthError, InteractionStatus } from "@azure/msal-browser";
-import {
-  loginRequestB2C,
-  loginRequestORG,
-  msalInstanceB2C,
-  msalInstanceORG,
-} from "authConfig";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import useAuthSession from "../../hooks/useAuthSession";
 import {
-  setExpiresOn,
   setAuthType,
-  getAuthType,
   getDeepLinkURL,
   setDeepLinkURL,
   setActiveWorkSpace,
+  ensureAccessToken,
+  getApiErrorMessage,
+  hasSession,
 } from "@orion/shared";
 import Spinner from "@orion/shared/src/components/spinner/spinner.component";
 import { useTranslation } from "react-i18next";
@@ -29,16 +18,8 @@ import Unauthorized from "pages/Unauthorized/Unauthorized";
 import ConnectionError from "pages/Unauthorized/ConnectionError";
 import { API_ERROR_TYPES, getLoginConnectionErrorMeta } from "@orion/shared";
 import { useToast } from "@orion/shared";
-import { acquireTokenWithFallback } from "../../utils/common";
 import { performAppLogout } from "../../utils/authLogout";
-import {
-  halfGlobal,
-  msLogo,
-  orionLogo,
-  slide3,
-  eurolandLogo,
-  slide4,
-} from "../../assets/images/loginpage";
+import { halfGlobal, eurolandLogo } from "../../assets/images/loginpage";
 import LoginDashboardSlide from "./components/LoginDashboardSlide";
 import LoginCarouselAnimatedSlide from "./components/LoginCarouselAnimatedSlide";
 import LoginWorkspaceSlide from "./components/LoginWorkspaceSlide";
@@ -65,14 +46,16 @@ const TASK_SLIDE_ANIMATIONS_ENABLED = true;
 
 export default function Login() {
   const { showToast } = useToast();
-  const { instance, inProgress, accounts } = useMsal();
-  const [{ data }, { setAuth, getUserInfoData, logoutUser }] = useAuth();
+  const [{ data }, { getAuth, setAuth, getUserInfoData, logoutUser }] = useAuth();
+  const { isAuthenticated } = useAuthSession();
+  const [credentials, setCredentials] = useState({ username: "", password: "" });
+  const [loginError, setLoginError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isTokenSuccess, setIsTokenSuccess] = useState();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [activeForm, setActiveForm] = useState("login");
   const [activateSignUpSuccess, setActivateSignUpSuccess] = useState(false);
-  const [euButtonHide, setEuButtonHide] = useState(false);
   const [isRequestFailed, setIsRequestFailed] = useState(false);
   const [connectionError, setConnectionError] = useState(null);
   const [activeSlide, setActiveSlide] = useState(0);
@@ -106,81 +89,39 @@ export default function Login() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
 
-  const applyTokenResponse = useCallback(
-    (response) => {
-      if (!response?.accessToken) {
-        setIsTokenSuccess(false);
-        return;
-      }
-      setAuth(response.accessToken);
-      setExpiresOn(response.idTokenClaims.exp);
-      setIsTokenSuccess(true);
-    },
-    [setAuth],
-  );
+  /** Username/password sign-in against the Python API. */
+  const handlePasswordLogin = async (event) => {
+    event.preventDefault();
+    if (isSubmitting) return;
 
-  /** AD Login — reuse cached MSAL session when available */
-  const handleOrgLogin = async () => {
-    const loginError = getLoginConnectionErrorMeta();
-    if (loginError) {
-      setConnectionError(loginError);
+    const configError = getLoginConnectionErrorMeta();
+    if (configError) {
+      setConnectionError(configError);
       return;
     }
 
-    setAuthType("ORG");
-
-    const cachedAccounts = instance.getAllAccounts();
-    if (cachedAccounts.length > 0) {
-      instance.setActiveAccount(cachedAccounts[0]);
-      try {
-        const response = await instance.acquireTokenSilent({
-          ...loginRequestORG,
-          account: cachedAccounts[0],
-        });
-        applyTokenResponse(response);
-        return;
-      } catch (error) {
-        if (!(error instanceof InteractionRequiredAuthError)) {
-          console.error("Silent AD login failed", error);
-          const loginError = getLoginConnectionErrorMeta(error);
-          if (loginError) {
-            setConnectionError(loginError);
-          }
-          return;
-        }
-      }
+    const username = credentials.username.trim();
+    if (!username || !credentials.password) {
+      setLoginError(t("login.credentials_required"));
+      return;
     }
 
-    instance.loginRedirect(loginRequestORG).catch((e) => {
-      console.error("ORG redirect login failed", e);
-      const loginError = getLoginConnectionErrorMeta(e);
-      if (loginError) {
-        setConnectionError(loginError);
-      }
-    });
-  };
-
-  /** Legacy handler kept for B2C flows if re-enabled */
-  const handleLogin = (actionType, loginType) => {
-    const activeInstance = loginType != 1 ? msalInstanceB2C : msalInstanceORG;
-    if (actionType === "popup") {
-      activeInstance.loginPopup(loginRequestORG).catch((e) => {
-        console.error("Login popup failed", e);
-      });
-    } else if (actionType === "redirect") {
-      if (loginType !== 1) {
-        setAuthType("B2C");
-        activeInstance.loginRedirect(loginRequestB2C).catch((e) => {
-          console.error("B2C redirect login failed", e);
-          const loginError = getLoginConnectionErrorMeta(e);
-          if (loginError) {
-            setConnectionError(loginError);
-          }
-        });
-        setEuButtonHide(true);
+    setLoginError("");
+    setIsSubmitting(true);
+    try {
+      await getAuth({ username, password: credentials.password });
+      setAuthType("LOCAL");
+      setCredentials((prev) => ({ ...prev, password: "" }));
+      setIsTokenSuccess(true);
+    } catch (error) {
+      const connError = getLoginConnectionErrorMeta(error);
+      if (connError) {
+        setConnectionError(connError);
       } else {
-        handleOrgLogin();
+        setLoginError(getApiErrorMessage(error) || t("login.invalid_credentials"));
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -205,90 +146,36 @@ export default function Login() {
     return () => window.clearTimeout(timeoutId);
   }, [isCarouselPaused, advanceCarousel, activeSlide]);
 
-  /** Used to get - Access Token using account scope */
-  const isAuthenticated = useIsAuthenticated();
-  const toastShownRef = useRef(false);
-
+  /** Restore an existing session (stored refresh token) without asking for the password again. */
   useEffect(() => {
-    if (inProgress !== InteractionStatus.None) return undefined;
-
     let isMounted = true;
 
-    const attemptExistingSession = async () => {
-      const cachedAccounts = instance.getAllAccounts();
-      if (cachedAccounts.length === 0) {
-        if (isMounted) setIsCheckingSession(false);
-        return;
-      }
+    if (!hasSession()) {
+      setIsCheckingSession(false);
+      return undefined;
+    }
 
-      if (!getAuthType()) {
-        setAuthType("ORG");
-      }
-
-      instance.setActiveAccount(cachedAccounts[0]);
-
-      if (data?.accessToken && data?.details) {
-        if (isMounted) setIsCheckingSession(false);
-        return;
-      }
-
-      const activeLoginRequest =
-        getAuthType() === "B2C" ? loginRequestB2C : loginRequestORG;
-
-      try {
-        const response = await instance.acquireTokenSilent({
-          ...activeLoginRequest,
-          account: cachedAccounts[0],
-        });
-        if (isMounted) {
-          applyTokenResponse(response);
+    ensureAccessToken()
+      .then(({ accessToken }) => {
+        if (!isMounted) return;
+        setAuth(accessToken);
+        setIsTokenSuccess(true);
+      })
+      .catch((error) => {
+        console.error("Existing session restore failed", error);
+        const loginError = getLoginConnectionErrorMeta(error);
+        if (loginError && isMounted) {
+          setConnectionError(loginError);
         }
-      } catch (error) {
-        if (!(error instanceof InteractionRequiredAuthError)) {
-          console.error("Existing session restore failed", error);
-          const loginError = getLoginConnectionErrorMeta(error);
-          if (loginError && isMounted) {
-            setConnectionError(loginError);
-          }
-        }
-      } finally {
+      })
+      .finally(() => {
         if (isMounted) setIsCheckingSession(false);
-      }
-    };
-
-    attemptExistingSession();
+      });
 
     return () => {
       isMounted = false;
     };
-  }, [inProgress, instance, data?.accessToken, data?.details, applyTokenResponse]);
-
-  useEffect(() => {
-    if (!isAuthenticated || toastShownRef.current || !accounts[0] || data?.accessToken) {
-      return;
-    }
-
-    toastShownRef.current = true;
-    instance.setActiveAccount(accounts[0]);
-
-    const activeInstance = getAuthType() === "B2C" ? msalInstanceB2C : msalInstanceORG;
-    const activeLoginRequest =
-      getAuthType() === "B2C" ? loginRequestB2C : loginRequestORG;
-
-    acquireTokenWithFallback(activeInstance, accounts[0], activeLoginRequest)
-      .then((response) => {
-        applyTokenResponse(response);
-      })
-      .catch((error) => {
-        console.error("Token refresh failed", error);
-        const loginError = getLoginConnectionErrorMeta(error);
-        if (loginError) {
-          setConnectionError(loginError);
-          return;
-        }
-        unAuthorizedUserRequestFailed();
-      });
-  }, [isAuthenticated, accounts, instance, applyTokenResponse, data?.accessToken]);
+  }, []);
 
   useEffect(() => {
     const configError = getLoginConnectionErrorMeta();
@@ -355,11 +242,7 @@ export default function Login() {
       variant: "danger",
     });
     setAuth("");
-    setExpiresOn("");
     setActiveWorkSpace("");
-    instance.logoutPopup({
-      postLogoutRedirectUri: "/",
-    });
   };
 
   useEffect(() => {
@@ -552,30 +435,51 @@ export default function Login() {
               )}
 
               {activeForm === "login" && (
-                <>
-                  <AuthenticatedTemplate>
-                    <button type="button" className="login-page__ms-btn" disabled>
-                      <span>{t("common.loading")}...</span>
-                    </button>
-                  </AuthenticatedTemplate>
-                  <UnauthenticatedTemplate>
-                    {!euButtonHide && (
-                      <button
-                        type="button"
-                        className="login-page__ms-btn"
-                        onClick={handleOrgLogin}
-                        disabled={inProgress === "login"}
-                      >
-                        <img src={msLogo} alt="" aria-hidden="true" />
-                        <span>
-                          {inProgress === "login"
-                            ? `${t("login.inprogress")}...`
-                            : t("login.sign_in_microsoft")}
-                        </span>
-                      </button>
-                    )}
-                  </UnauthenticatedTemplate>
-                </>
+                <form className="login-page__form" onSubmit={handlePasswordLogin} noValidate>
+                  <label className="login-page__label" htmlFor="login-username">
+                    {t("login.username")}
+                  </label>
+                  <input
+                    id="login-username"
+                    ref={inputRef}
+                    className="login-page__input"
+                    type="text"
+                    name="username"
+                    autoComplete="username"
+                    value={credentials.username}
+                    onChange={(e) =>
+                      setCredentials((prev) => ({ ...prev, username: e.target.value }))
+                    }
+                    disabled={isSubmitting}
+                    required
+                  />
+                  <label className="login-page__label" htmlFor="login-password">
+                    {t("login.password")}
+                  </label>
+                  <input
+                    id="login-password"
+                    className="login-page__input"
+                    type="password"
+                    name="password"
+                    autoComplete="current-password"
+                    value={credentials.password}
+                    onChange={(e) =>
+                      setCredentials((prev) => ({ ...prev, password: e.target.value }))
+                    }
+                    disabled={isSubmitting}
+                    required
+                  />
+                  {loginError && (
+                    <p className="login-page__error" role="alert">
+                      {loginError}
+                    </p>
+                  )}
+                  <button type="submit" className="login-page__ms-btn" disabled={isSubmitting}>
+                    <span>
+                      {isSubmitting ? `${t("login.inprogress")}...` : t("login.sign_in")}
+                    </span>
+                  </button>
+                </form>
               )}
 
               <footer className="login-page__form-footer">

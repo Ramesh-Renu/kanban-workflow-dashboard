@@ -20,6 +20,7 @@
   },
   "scripts": {
     "start:internal": "npm start -w @orion/internal",
+    "start:internal:local": "npm run start:local -w @orion/internal",
     "start:branding": "npm start -w @orion/branding-portal",
     "build:internal": "npm run build -w @orion/internal && gzip-all \"apps/internal/build/**/*.{css,js,svg,png,jpg,jpeg,gif,woff,woff2,ttf,eot,otf,mp3,wav,ogg}\"",
     "build:branding": "npm run build -w @orion/branding-portal && gzip-all \"apps/branding-portal/build/**/*.{css,js,svg,png,jpg,jpeg,gif,woff,woff2,ttf,eot,otf,mp3,wav,ogg}\"",

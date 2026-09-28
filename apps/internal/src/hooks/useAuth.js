@@ -1,43 +1,29 @@
 import { useCallback, useLayoutEffect } from "react";
 import { getApiErrorMeta } from "@orion/shared";
-import { useIsAuthenticated, useMsal } from "@azure/msal-react";
 import { useGlobalContext } from "store/context/GlobalProvider"; // your context hook
-import {
-  loginRequestB2C,
-  loginRequestORG,
-  msalInstanceB2C,
-  msalInstanceORG,
-} from "authConfig";
 
 import {
-  setExpiresOn,
   setAuthType,
-  getAuthType,
   setActiveWorkSpace,
+  ensureAccessToken,
+  loginWithPassword,
+  logoutSession,
 } from "@orion/shared";
-import { getUserInfo, getLogin, logout, getUserDetailsById } from "../services";
-import { acquireTokenWithFallback } from "../utils/common";
+import { getUserInfo, getUserDetailsById } from "../services";
+import useAuthSession from "./useAuthSession";
 
 let userInfoRequestPromise = null;
 
 const useAuth = () => {
   const { authState, dispatch } = useGlobalContext(); // using context instead of redux
-  const { instance, accounts } = useMsal();
-  const isAuthenticated = useIsAuthenticated();
+  const { isAuthenticated } = useAuthSession();
 
+  /** Username/password sign-in. Throws on failure so the form can show the message. */
   const getAuth = useCallback(
-    async (params) => {
-      dispatch({ type: "SET_LOADING" });
-
-      try {
-        // You can call login API if applicable
-        const response = await getLogin(params); // <-- adjust URL
-        const token = response.data.accessToken;
-
-        dispatch({ type: "SET_AUTH", payload: token });
-      } catch (error) {
-        dispatch({ type: "SET_ERROR", payload: error });
-      }
+    async ({ username, password }) => {
+      const { accessToken } = await loginWithPassword(username, password);
+      dispatch({ type: "SET_AUTH", payload: accessToken });
+      return accessToken;
     },
     [dispatch],
   );
@@ -100,47 +86,24 @@ const useAuth = () => {
     [dispatch],
   );
 
-  const logoutUser = useCallback(() => {
-    try {
-      // You can call login API if applicable
-      const response = logout(); // <-- adjust URL
-      if (response.data.status) {
-        dispatch({ type: "LOGOUT" });
-      }
-    } catch (error) {
-      dispatch({ type: "SET_ERROR", payload: error });
-    }
-    setExpiresOn("");
+  /** Revokes the refresh token server-side, then clears local session + state. */
+  const logoutUser = useCallback(async () => {
+    await logoutSession();
+    dispatch({ type: "LOGOUT" });
     setAuthType("");
     setActiveWorkSpace("");
   }, [dispatch]);
 
-  // Auto login if token available in localStorage
+  // Restore the session on reload: stored tokens → React state (refreshing if expired).
   useLayoutEffect(() => {
-    if (
-      authState?.activeUser?.data &&
-      !authState?.activeUser?.data.accessToken &&
-      isAuthenticated &&
-      !authState?.activeUser?.data.expiresOn &&
-      getAuthType()
-    ) {
-      const activeInstance = getAuthType() === "B2C" ? msalInstanceB2C : msalInstanceORG;
-      const activeLoginRequest =
-        getAuthType() === "B2C" ? loginRequestB2C : loginRequestORG;
-
-      acquireTokenWithFallback(activeInstance, accounts[0], activeLoginRequest)
-        .then((response) => {
-          setAuth(response.accessToken);
-          setExpiresOn(response.idTokenClaims.exp);
-        })
-        .catch((error) => {
-          console.error("Token refresh failed", error);
-          setExpiresOn("");
-          setAuthType("");
-          setActiveWorkSpace("");
-        });
-    }
-  }, [authState]);
+    if (!isAuthenticated || authState?.activeUser?.data?.accessToken) return;
+    ensureAccessToken()
+      .then(({ accessToken }) => setAuth(accessToken))
+      .catch((error) => {
+        console.error("Session restore failed", error);
+        setActiveWorkSpace("");
+      });
+  }, [isAuthenticated, authState?.activeUser?.data?.accessToken, setAuth]);
 
   return [
     {

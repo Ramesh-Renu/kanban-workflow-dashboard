@@ -11,6 +11,7 @@ import {
   setActiveWorkSpace,
   setDeepLinkURL,
 } from "../utils/storage";
+import { clearSession, getAccessToken, refreshSession } from "./authSession";
 
 // Request methods
 const GET = "GET";
@@ -18,18 +19,15 @@ const POST = "POST";
 const PUT = "PUT";
 const DELETE = "DELETE";
 
-let msalInstance;
 let setAuthFn;
 let toastFn;
 let logoutUserFn;
 
 export const injectDependencies = ({
-  instance,
   setAuth,
   showToast,
   logoutUser,
 }) => {
-  msalInstance = instance;
   setAuthFn = setAuth;
   toastFn = showToast;
   logoutUserFn = logoutUser;
@@ -88,10 +86,14 @@ export const injectStore = (store) => {
   AppStore = store;
 };
 
+/** Session store first (updated synchronously on refresh), React store as fallback. */
+const currentToken = () =>
+  getAccessToken() || AppStore?.authState?.activeUser?.data?.accessToken;
+
 const waitForToken = () => {
   return new Promise((resolve) => {
     const check = () => {
-      const token = AppStore?.authState?.activeUser?.data?.accessToken;
+      const token = currentToken();
       if (token) {
         resolve(token);
       } else {
@@ -240,6 +242,23 @@ axiosBase.interceptors.response.use(
     // Check if the error is a 401 Unauthorized
     notifyConnectionErrorOnce(error);
 
+    // Expired access token: refresh once and replay the request before giving up.
+    const original = error.config;
+    if (
+      error?.response?.status === 401 &&
+      original &&
+      !original._authRetried &&
+      !String(original.url || "").includes("/master/auth/")
+    ) {
+      try {
+        const { accessToken } = await refreshSession();
+        if (setAuthFn) setAuthFn(accessToken);
+        return axiosBase({ ...original, _authRetried: true });
+      } catch {
+        // fall through to the forced logout below
+      }
+    }
+
     if (shouldForceLogoutOn401(error) && !isSessionExpired) {
       const now = Date.now();
       if (now - lastForcedLogoutAt < FORCED_LOGOUT_COOLDOWN_MS) {
@@ -272,13 +291,8 @@ axiosBase.interceptors.response.use(
         setExpiresOn("");
         setActiveWorkSpace("");
 
-        if (msalInstance) {
-          await msalInstance.logoutPopup({
-            postLogoutRedirectUri: "/",
-          });
-        } else {
-          window.location.href = "/";
-        }
+        clearSession();
+        window.location.href = "/";
       } catch (logoutError) {
         console.error("Error handling 401 logout:", logoutError);
       }
@@ -474,7 +488,7 @@ export const doFileUpload = async (url, params) => {
     }
     const createXHR = () => new XMLHttpRequest();
 
-    const token = AppStore?.authState?.activeUser?.data?.accessToken;
+    const token = currentToken();
 
     const response = await axios.post(url, formData, {
       baseURL: Config.plgBaseUrl,
@@ -506,7 +520,7 @@ export const doFileUpload = async (url, params) => {
  */
 export const uploadBrandingGuidelinesFormData = async (url, formData) => {
   try {
-    const token = AppStore?.authState?.activeUser?.data?.accessToken;
+    const token = currentToken();
     const response = await axios.post(url, formData, {
       baseURL: Config.plgBaseUrl,
       headers: {
@@ -539,7 +553,7 @@ export const addToolInfoData = async (url, param) => {
     // for (const [key, value] of formData.entries()) {
     //   console.log(`${key}:`, value);
     // }
-    const token = AppStore?.authState?.activeUser?.data?.accessToken;
+    const token = currentToken();
     const response = await axios.post(url, formData, {
       baseURL: Config.plgBaseUrl,
       headers: {
@@ -772,7 +786,7 @@ const extractExportFileFromJson = (payload, fallbackName) => {
 export const doFileDownloadPost = async (path, body, fileName) => {
   consoleRequestResponseTime("request", Config.plgBaseUrl + "" + path);
   try {
-    const token = AppStore?.authState?.activeUser?.data?.accessToken;
+    const token = currentToken();
     const headers = {
       ...getHttpHeader(),
       "User-From-Frontend": true,
